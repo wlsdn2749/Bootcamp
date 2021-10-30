@@ -4,7 +4,7 @@ ALLOWED_HOSTS = ['13.209.161.6']
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'config',
+        'NAME': 'bootcamp',
         'USER': 'root',
         'PASSWORD': 'wjsansrk',
         'HOST': 'localhost',
