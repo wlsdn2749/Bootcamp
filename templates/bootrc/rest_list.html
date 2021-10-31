@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+1<link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
+{% block content %}
+<div class="container my-3">
+    <table class="table">
+        <thead>
+        <tr class="thead-dark">
+            <th>번호</th>
+            <th>가게 이름</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% if rest_list %}
+        {% for rest in rest_list %}
+        <tr>
+            <td>{{ rest.rest_num }}</a></td>
+            <td>{{ rest.rest_name }}</td>
+        </tr>
+        {% endfor %}
+        {% else %}
+        <tr>
+            <td colspan="3">질문이 없습니다.</td>
+        </tr>
+        {% endif %}
+        </tbody>
+    </table>
+
+</div>
+{% endblock %}

@@ -9,43 +9,24 @@ from django.db import models
 
 
 class Menu(models.Model):
-    menu_num = models.AutoField(primary_key=True)
-    menu_catenum = models.IntegerField()
-    menu_name2 = models.CharField(max_length=30)
-
-    class Meta:
-        managed = False
-        db_table = 'menu'
-
+    menu_num = models.AutoField(primary_key=True) # 메뉴번호 (primary : autofield 자동증가 )
+    menu_catenum = models.IntegerField() #메뉴 카테고리 번호
+    menu_name2 = models.CharField(max_length=30) #메뉴 이름
 
 class Prefer(models.Model):
-    user_num = models.IntegerField()
-    pref_menu = models.IntegerField()
-    pref_mod = models.IntegerField()
-
-    class Meta:
-        managed = False
-        db_table = 'prefer'
-
+    user_num = models.IntegerField() #유저이름 (foreign key)
+    pref_menu = models.IntegerField() # 선호하는 메뉴 (foreign ? )
+    pref_mod = models.IntegerField() # 선호하는지 안하는지 0 : 선호 1: 비선호
 
 class Rest(models.Model):
-    rest_num = models.AutoField(primary_key=True)
-    rest_name = models.CharField(max_length=30)
-
-    class Meta:
-        managed = False
-        db_table = 'rest'
-
+    rest_num = models.AutoField(primary_key=True) # 가게 고유번호 (primary : autofield)
+    rest_name = models.CharField(max_length=30) #  가게 이름
 
 class RestMenu(models.Model):
-    rest_num = models.IntegerField()
-    rest_menu = models.IntegerField()
+    rest_num = models.ForeignKey(Rest, on_delete=models.CASCADE) #가게의 번호
+    rest_menu = models.CharField(max_length=30)  # 가게 메뉴
 
-    class Meta:
-        managed = False
-        db_table = 'rest_menu'
-
-
+#아직 안만듬
 class User(models.Model):
     user_num = models.AutoField(primary_key=True)
     id = models.CharField(max_length=20)
@@ -53,6 +34,3 @@ class User(models.Model):
     nickname = models.CharField(max_length=10)
     email = models.CharField(max_length=100)
 
-    class Meta:
-        managed = False
-        db_table = 'user'
