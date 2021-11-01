@@ -23,7 +23,7 @@ class Rest(models.Model):
     rest_name = models.CharField(max_length=30) #  가게 이름
 
 class RestMenu(models.Model):
-    rest_num = models.ForeignKey(Rest, on_delete=models.CASCADE) #가게의 번호
+    rest = models.ForeignKey(Rest, on_delete=models.CASCADE) #가게를 나타내는 foreignkey
     rest_menu = models.CharField(max_length=30)  # 가게 메뉴
 
 #아직 안만듬

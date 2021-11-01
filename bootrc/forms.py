@@ -1,5 +1,5 @@
 from django import forms
-from .models import Menu, Rest
+from .models import Menu, Rest, RestMenu
 
 
 class MenuForm(forms.ModelForm):
@@ -11,3 +11,9 @@ class RestForm(forms.ModelForm):
     class Meta:
         model = Rest  # 사용할 모델
         fields = ['rest_name']  # RestForm에서 사용할 rest모델의 1가지 속성
+
+
+class RestMenuForm(forms.ModelForm):
+    class Meta:
+        model = RestMenu  # 사용할 모델
+        fields = ['rest_menu']  # RestForm에서 사용할 rest모델의 1가지 속성
