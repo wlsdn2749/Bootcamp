@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = 'django-insecure-sqboxa4eo))^pe^)mm&q_o&^n#*7+iev6&=f9t%(4@rhb%o$w3'
+#SECRET_KEY = 'django-insecure-sqboxa4eo))^pe^)mm&q_o&^n#*7+iev6&=f9t%(4@rhb%o$w3'
 with open("secret.json") as f:
     secrets = json.loads(f.read())
 
@@ -130,9 +130,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ko-kr'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
 
