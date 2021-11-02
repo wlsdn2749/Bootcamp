@@ -18,5 +18,7 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('bootrc/', include('bootrc.urls')),
+    path('', include('bootrc.urls')),
+    # 기본 링크를 지웠음 bootrc/urls에서 들어가야할 링크 확인
+    # 최초 들어갈 링크는 main/ 링크
 ]

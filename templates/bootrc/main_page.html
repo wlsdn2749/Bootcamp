@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <script language="JavaScript1.2">
+        top.document.title="메인";
+    </script>
+    <a href="{% url 'bootrc:login' %}" class="btn btn-primary">회원, 회원가입</a>
+    <a href="{% url 'bootrc:index' %}" class="btn btn-primary">비회원</a>
+    <!--
+     회원 비회원 분류 버튼 추가함
+     회원 = 로그인 화면으로 이동
+     비회원 = 메뉴 버튼 있는 메인 페이지로 이동
+     -->
+{% endblock %}
