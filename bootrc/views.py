@@ -15,11 +15,13 @@ def rest_list(request):
     context = {'rest_list': rest_list}
     return render(request, 'bootrc/rest_list.html', context)
 
+
 def restmenu_list(request, rest_rest_num):
     rest = get_object_or_404(Rest, pk=rest_rest_num)
-    restmenu_list = RestMenu.objects.order_by('rest_id')
-    context = {'restmenu_list': restmenu_list}
+    restmenu_list = RestMenu.objects.filter(rest_id=rest.rest_num) #RestMenu의 멤버 rest_id는 = rest객체의 rest_num
+    context = {'rest': rest,'restmenu_list': restmenu_list}
     return render(request, 'bootrc/restmenu_list.html', context) # 수정해야함 이부분
+
 
 def menu_create(request):
     '''
@@ -60,7 +62,7 @@ def restmenu_create(request, rest_rest_num):
             restmenu = form.save(commit=False)
             restmenu.rest = rest
             restmenu.save()
-            return redirect('bootrc:index')
+            return redirect('bootrc:restmenu_list', rest_rest_num)
     else:
         form = RestMenuForm()
     rest_menu = {'rest': rest, 'form': form}

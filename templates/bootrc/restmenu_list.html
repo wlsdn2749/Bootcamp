@@ -7,8 +7,8 @@
         <thead>
         <tr class="thead-dark">
             <th>번호</th>
-            <th>가게 번호</th>
             <th>가게 이름</th>
+            <th>메뉴 이름</th>
         </tr>
         </thead>
         <tbody>
@@ -16,8 +16,8 @@
         {% for restmenu in restmenu_list %}
         <tr>
             <td>{{ restmenu.rest.rest_num }}</td>
-            <td><{ restmenu.rest.rest_name }}</td>
-            <td><{ restmenu.rest_menu }}</td>
+            <td>{{ restmenu.rest.rest_name }}</td>
+            <td>{{ restmenu.rest_menu }}</td>
         </tr>
         {% endfor %}
         {% else %}
@@ -27,6 +27,6 @@
         {% endif %}
         </tbody>
     </table>
-    <a href="{% url 'bootrc:restmenu_create' rest_rest_num %}" class="btn btn-primary">메뉴 만들기</a>
+    <a href="{% url 'bootrc:restmenu_create' rest.rest_num %}" class="btn btn-primary">메뉴 만들기</a>
 </div>
 {% endblock %}
