@@ -22,6 +22,11 @@
             <input type="text" class="form-control" name="rest_name" id="rest_name"
                    value="{{ form.subject.value|default_if_none:'' }}">
         </div>
+        <div class="form-group">
+            <label for="rest_star">별점</label>
+            <input type="number" class="form-control" step="0.1" name="rest_star" id="rest_star"
+                   value="{{ form.subject.value|default_if_none:'' }}">
+        </div>
         <button type="submit" class="btn btn-primary">저장하기</button>
     </form>
 </div>
