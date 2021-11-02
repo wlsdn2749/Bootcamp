@@ -8,6 +8,7 @@
         <tr class="thead-dark">
             <th>번호</th>
             <th>가게 이름</th>
+            <th>별점</th>
         </tr>
         </thead>
         <tbody>
@@ -16,6 +17,7 @@
         <tr>
             <td>{{ rest.rest_num }}</td>
             <td><a href="{% url 'bootrc:restmenu_list' rest.rest_num %}">{{ rest.rest_name }}</a></td>
+            <td>{{ rest.rest_star}}</td>
         </tr>
         {% endfor %}
         {% else %}

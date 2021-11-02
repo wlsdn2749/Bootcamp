@@ -21,6 +21,7 @@ class Prefer(models.Model):
 class Rest(models.Model):
     rest_num = models.AutoField(primary_key=True) # 가게 고유번호 (primary : autofield)
     rest_name = models.CharField(max_length=30) #  가게 이름
+    rest_star = models.FloatField(default=5)
 
 class RestMenu(models.Model):
     rest = models.ForeignKey(Rest, on_delete=models.CASCADE) #가게를 나타내는 foreignkey
