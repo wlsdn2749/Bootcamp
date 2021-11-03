@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <script language="JavaScript1.2">
+        top.document.title="로그인";
+    </script>
+    <a href="{% url 'bootrc:index' %}" class="btn btn-primary">메인 화면 이동</a>
+    <!-- index = 메뉴목록 있는 메인 페이지로 이동 -->
+
+<!-- 로그인 창 구성 : 개발중 -->
+<div class="text-center">
+<main class="form-signin">
+  <link href="{% static 'bootstrap.min.css' %}" rel="stylesheet">
+  <form>
+    <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+    <div class="form-floating">
+      <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com"
+      style="width:300px;text-align:center">
+      <label for="floatingInput">Email address</label>
+    </div>
+    <div class="form-floating">
+      <input type="password" class="form-control" id="floatingPassword" placeholder="Password"
+      style="width:300px;text-align:center">
+      <label for="floatingPassword">Password</label>
+    </div>
+    <div class="checkbox mb-3">
+      <label>
+        <input type="checkbox" value="remember-me"> Remember me
+      </label>
+    </div>
+    <button class="w-10 btn btn-lg btn-primary" type="submit">Sign in</button>
+  </form>
+</main>
+</div>
+
+
+{% endblock %}
