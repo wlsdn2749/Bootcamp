@@ -89,6 +89,5 @@ def distance_from_college(request, rest_rest_num):
         rest_location_lat = rest_location.rest_location_lat
         rest_location_lon = rest_location.rest_location_lon
         distance = math.sqrt((35.817094-rest_location_lat)+(35.813841-rest_location_lon))
-#    return render(request, 'bootrc/rest_list.html', {'distance': distance})
-    return render(request, 'bootrc/rest_list.html', {'distance': 4})
+    return render(request, 'bootrc/rest_list.html', {'distance': distance})
 
