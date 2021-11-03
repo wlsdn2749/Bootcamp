@@ -73,3 +73,12 @@ def restmenu_create(request, rest_rest_num):
         form = RestMenuForm()
     rest_menu = {'rest': rest, 'form': form}
     return render(request, 'bootrc/restmenu_form.html', rest_menu)
+
+
+# def recommend_algorithm_delivery(request, rest_rest_num):
+    """
+    음식추천 알고리즘 배달
+    전주대 후문 위도 경도 : 35.817094, 127.090152
+    전주대 정문 위도 경도 : 35.813841, 127.094034
+    """
+#   rest = get_object_or_404(Rest, pk=rest_rest_num)

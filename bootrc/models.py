@@ -22,10 +22,15 @@ class Rest(models.Model):
     rest_num = models.AutoField(primary_key=True) # 가게 고유번호 (primary : autofield)
     rest_name = models.CharField(max_length=30) #  가게 이름
     rest_star = models.FloatField(default=5)
+    rest_location_lat = models.FloatField(default=0)    # 가게 위도
+    rest_location_lon = models.FloatField(default=0)    # 가게 경도
+    rest_recent_user = models.IntegerField()            # 이용자 수
+    rest_number_reviews = models.IntegerField()         # 리뷰 개수
 
 class RestMenu(models.Model):
     rest = models.ForeignKey(Rest, on_delete=models.CASCADE) #가게를 나타내는 foreignkey
     rest_menu = models.CharField(max_length=30)  # 가게 메뉴
+    price = models.IntegerField()
 
 #아직 안만듬
 class User(models.Model):
@@ -34,4 +39,3 @@ class User(models.Model):
     password = models.CharField(max_length=30)
     nickname = models.CharField(max_length=10)
     email = models.CharField(max_length=100)
-
