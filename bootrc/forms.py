@@ -1,6 +1,8 @@
 from django import forms
 from .models import Menu, Rest, RestMenu
-
+# 회원가입에서 사용함.
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 
 class MenuForm(forms.ModelForm):
     class Meta:
@@ -19,3 +21,9 @@ class RestMenuForm(forms.ModelForm):
     class Meta:
         model = RestMenu  # 사용할 모델
         fields = ['rest_menu']  # RestForm에서 사용할 rest모델의 1가지 속성
+
+# 회원가입 유저 폼
+class UserForm(UserCreationForm):
+    class Meta:
+        model=User
+        fields=("username","password1","password2")

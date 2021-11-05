@@ -91,3 +91,18 @@ def distance_from_college(request, rest_rest_num):
         distance = math.sqrt((35.817094-rest_location_lat)+(35.813841-rest_location_lon))
     return render(request, 'bootrc/rest_list.html', {'distance': distance})
 
+# 회원가입 가능 구현
+def signup(request):
+    if request.method=="POST": # 요청받은 방식이 POST 방식이 아닌 경우, 회원가입 페이지로 이동함.
+        form=UserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username=form.cleaned_data.get('username')
+            raw_password=form.cleaned_data.get('password1')
+            user=authenticate(username=username, password=raw_password) # authenticate 함수는 사용자명과 비밀번호가 일치하는지 검증해 줌.
+
+            login(request,user) # 로그인
+            return redirect('bootrc:index') # 가입 완료 후, 메인 페이지로 이동함.
+    else:
+        form=UserForm()
+    return render(request,'bootrc/signup.html',{'form':form})
