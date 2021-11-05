@@ -1,10 +1,13 @@
 from django.urls import path
 from . import views
+from django.contrib.auth import views as auth_views #django의 자체 로그인 기능 사용(django db의 로그인 테이블 사용)
 
 app_name = 'bootrc'
 
 urlpatterns = [
-    path('login/', views.login, name='login'),  # 회원(또는 가입용) 페이지로 이동
+    #path('login/', views.login, name='login'),  # 회원(또는 가입용) 페이지로 이동
+    path('login',auth_views.LoginView.as_view(template_name='pybo/login.html'),name='login'),
+    path('logout',auth_views.LogoutView.as_view(),name='logout'),
     path('bootrc/', views.index, name='index'),
     path('menu/list/', views.menu_list, name='menu_list'),
     path('rest/list/', views.rest_list, name='rest_list'),
