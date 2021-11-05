@@ -105,4 +105,4 @@ def signup(request):
             return redirect('bootrc:index') # 가입 완료 후, 메인 페이지로 이동함.
     else:
         form=UserForm()
-    return render(request,'pybo/signup.html',{'form':form})
+    return render(request,'bootrc/signup.html',{'form':form})

@@ -5,7 +5,7 @@ from django.contrib.auth import views as auth_views #django의 자체 로그인 
 app_name = 'bootrc'
 
 urlpatterns = [
-    path('login',auth_views.LoginView.as_view(template_name='pybo/login.html'),name='login'), # 로그인 페이지로 이동
+    path('login',auth_views.LoginView.as_view(template_name='bootrc/login.html'),name='login'), # 로그인 페이지로 이동
     path('logout',auth_views.LogoutView.as_view(),name='logout'), # 로그아웃 기능
     path('signup',views.signup,name='signup'), # 회원가입 페이지로 이동
     path('bootrc/', views.index, name='index'),
