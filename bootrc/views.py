@@ -1,25 +1,35 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Menu, Rest, RestMenu
-from .forms import MenuForm, RestForm, RestMenuForm
+from .forms import MenuForm, RestForm, RestMenuForm, UserForm
 import math
+
 
 def main(request):  # 회원, 비회원을 구분하는 페이지
     return render(request, 'bootrc/main_page.html')
 
+
 def login(request):  # 회원(또는 가입) 로그인 페이지
     return render(request, 'bootrc/login.html')
 
+
 def index(request):  # 버튼 메뉴들이 있는 메인 페이지
     return render(request, 'bootrc/main.html')
+
 
 def menu_list(request):
     menu_list = Menu.objects.order_by('menu_num')
     context = {'menu_list': menu_list}
     return render(request, 'bootrc/menu_list.html', context)
 
+
 def rest_list(request):
     rest_list = Rest.objects.order_by('rest_num')
     context = {'rest_list': rest_list}
+    """
+        전주대 후문 위도 경도 : 35.817094, 127.090152 lat
+        전주대 정문 위도 경도 : 35.813841, 127.094034 lon
+    """
+    # 거리 계산 잠시 보류
     return render(request, 'bootrc/rest_list.html', context)
 
 
@@ -77,32 +87,21 @@ def restmenu_create(request, rest_rest_num):
     rest_menu = {'rest': rest, 'form': form}
     return render(request, 'bootrc/restmenu_form.html', rest_menu)
 
-# 테스트 해봐야 함
-def distance_from_college(request, rest_rest_num):
-    """
-    학교에서 가게 위치 거리 계산
-    전주대 후문 위도 경도 : 35.817094, 127.090152 lat
-    전주대 정문 위도 경도 : 35.813841, 127.094034 lon
-    """
-    rest_location = rest_rest_num
-    if request.method == 'POST':
-        rest_location_lat = rest_location.rest_location_lat
-        rest_location_lon = rest_location.rest_location_lon
-        distance = math.sqrt((35.817094-rest_location_lat)+(35.813841-rest_location_lon))
-    return render(request, 'bootrc/rest_list.html', {'distance': distance})
 
 # 회원가입 가능 구현
 def signup(request):
     if request.method=="POST": # 요청받은 방식이 POST 방식이 아닌 경우, 회원가입 페이지로 이동함.
-        form=UserForm(request.POST)
+        form = UserForm(request.POST)
         if form.is_valid():
             form.save()
-            username=form.cleaned_data.get('username')
-            raw_password=form.cleaned_data.get('password1')
-            user=authenticate(username=username, password=raw_password) # authenticate 함수는 사용자명과 비밀번호가 일치하는지 검증해 줌.
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            # authenticate 함수는 사용자명과 비밀번호가 일치하는지 검증해 줌.
 
-            login(request,user) # 로그인
-            return redirect('bootrc:index') # 가입 완료 후, 메인 페이지로 이동함.
+            login(request, user) # 로그인
+            return redirect('bootrc:index')
+            # 가입 완료 후, 메인 페이지로 이동함.
     else:
-        form=UserForm()
-    return render(request,'pybo/signup.html',{'form':form})
+        form = UserForm()
+    return render(request, 'bootrc/signup.html', {'form': form})
