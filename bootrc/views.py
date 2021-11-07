@@ -1,13 +1,14 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth import authenticate, login # 로그인 및 회원가입 기능을 구현하기 위한 패키지
 from .models import Menu, Rest, RestMenu
-from .forms import MenuForm, RestForm, RestMenuForm
+from .forms import MenuForm, RestForm, RestMenuForm, UserForm
 import math
 
 def main(request):  # 회원, 비회원을 구분하는 페이지
     return render(request, 'bootrc/main_page.html')
 
-def login(request):  # 회원(또는 가입) 로그인 페이지
-    return render(request, 'bootrc/login.html')
+"""def login(request):  # 회원(또는 가입) 로그인 페이지
+    return render(request, 'bootrc/login.html')"""
 
 def index(request):  # 버튼 메뉴들이 있는 메인 페이지
     return render(request, 'bootrc/main.html')
@@ -27,7 +28,7 @@ def restmenu_list(request, rest_rest_num):
     rest = get_object_or_404(Rest, pk=rest_rest_num)
     restmenu_list = RestMenu.objects.filter(rest_id=rest.rest_num) #RestMenu의 멤버 rest_id는 = rest객체의 rest_num
     context = {'rest': rest,'restmenu_list': restmenu_list}
-    return render(request, 'bootrc/restmenu_list.html', context) # 수정해야함 이부분
+    return render(request, 'bootrc/restmenu_list.html', context)
 
 
 def menu_create(request):
@@ -105,4 +106,30 @@ def signup(request):
             return redirect('bootrc:index') # 가입 완료 후, 메인 페이지로 이동함.
     else:
         form=UserForm()
-    return render(request,'pybo/signup.html',{'form':form})
+    return render(request,'bootrc/signup.html',{'form':form})
+
+
+def menu_delete(request, menu_menu_num):
+    '''
+    질문삭제
+    '''
+    menu = get_object_or_404(Menu, pk=menu_menu_num)
+    menu.delete()
+    return redirect('bootrc:menu_list')
+
+def rest_delete(request, rest_rest_num):
+    '''
+    메뉴삭제
+    '''
+    rest = get_object_or_404(Rest, pk=rest_rest_num)
+    rest.delete()
+    return redirect('bootrc:rest_list')
+
+def restmenu_delete(request, restmenu_id):
+    '''
+    가게메뉴삭제
+    '''
+    restmenu = get_object_or_404(RestMenu, pk=restmenu_id)
+    restmenu.delete()
+    #return redirect('bootrc:restmenu_list restmenu.rest.rest_num')
+    return redirect('bootrc:rest_list')

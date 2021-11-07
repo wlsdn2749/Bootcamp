@@ -12,6 +12,7 @@
             <th>경도</th>
             <th>별점</th>
             <th>거리</th>
+            <th>삭제</th>
         </tr>
         </thead>
         <tbody>
@@ -23,7 +24,10 @@
             <td>{{ rest.rest_location_lat }}</td>
             <td>{{ rest.rest_location_lon }}</td>
             <td>{{ rest.rest_star }}</td>
-            <td>{{ rest.rest_distance_fromBD }}</td>
+            <td>test</td>
+            <td><a href="#" data-uri="{% url 'bootrc:rest_delete' rest.rest_num %}"
+               class="delete btn btn-sm btn-outline-secondary">삭제</a></td>
+<!--delete href를 #으로 지정하여 확인창을 JS로 구현하기 위해-->
         </tr>
         {% endfor %}
         {% else %}
@@ -34,4 +38,16 @@
         </tbody>
     </table>
 </div>
+{% endblock %}
+<!--JS-->
+{% block script %}
+<script type="text/javascript">
+$(document).ready(function(){
+    $(".delete").on('click', function(){
+        if(confirm("정말로 삭제하시겠습니까?")){
+            location.href = $(this).data('uri');
+        }
+    });
+});
+</script>
 {% endblock %}

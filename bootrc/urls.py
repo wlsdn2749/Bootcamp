@@ -16,4 +16,7 @@ urlpatterns = [
     path('restmenu/list/<int:rest_rest_num>', views.restmenu_list, name='restmenu_list'),
     path('restmenu/create/<int:rest_rest_num>', views.restmenu_create, name='restmenu_create'),
     path('main/', views.main, name='main'),  # 메인 링크에서는 회원, 비회원 구분하는 페이지
+    path('menu/delete/<int:menu_menu_num>', views.menu_delete, name='menu_delete'),
+    path('rest/delete/<int:rest_rest_num>', views.rest_delete, name='rest_delete'),
+    path('restmenu/delete/<int:restmenu_id>', views.restmenu_delete, name='restmenu_delete')
 ]
