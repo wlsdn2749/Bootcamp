@@ -1,14 +1,13 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth import authenticate, login # 로그인 및 회원가입 기능을 구현하기 위한 패키지
 from .models import Menu, Rest, RestMenu
-from .forms import MenuForm, RestForm, RestMenuForm, UserForm
+from .forms import MenuForm, RestForm, RestMenuForm
 import math
 
 def main(request):  # 회원, 비회원을 구분하는 페이지
     return render(request, 'bootrc/main_page.html')
 
-"""def login(request):  # 회원(또는 가입) 로그인 페이지
-    return render(request, 'bootrc/login.html')"""
+def login(request):  # 회원(또는 가입) 로그인 페이지
+    return render(request, 'bootrc/login.html')
 
 def index(request):  # 버튼 메뉴들이 있는 메인 페이지
     return render(request, 'bootrc/main.html')
@@ -106,4 +105,4 @@ def signup(request):
             return redirect('bootrc:index') # 가입 완료 후, 메인 페이지로 이동함.
     else:
         form=UserForm()
-    return render(request,'bootrc/signup.html',{'form':form})
+    return render(request,'pybo/signup.html',{'form':form})
