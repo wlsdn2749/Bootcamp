@@ -9,6 +9,7 @@
             <th>메뉴 번호</th>
             <th>카테고리 번호</th>
             <th>메뉴</th>
+            <th>삭제</th>
         </tr>
         </thead>
         <tbody>
@@ -18,6 +19,9 @@
             <td>{{ menu.menu_num }}</td>
             <td>{{ menu.menu_catenum }}</td>
             <td>{{ menu.menu_name2 }}</td>
+            <td><a href="#" data-uri="{% url 'bootrc:menu_delete' menu.menu_num %}"
+               class="delete btn btn-sm btn-outline-secondary">삭제</a></td>
+<!--delete href를 #으로 지정하여 확인창을 JS로 구현하기 위해-->
         </tr>
         {% endfor %}
         {% else %}
@@ -29,4 +33,16 @@
     </table>
 <!--    <a href="{% url 'bootrc:menu_create' %}" class="btn btn-primary">메뉴 만들기</a>-->
 </div>
+{% endblock %}
+<!--JS-->
+{% block script %}
+<script type="text/javascript">
+$(document).ready(function(){
+    $(".delete").on('click', function(){
+        if(confirm("정말로 삭제하시겠습니까?")){
+            location.href = $(this).data('uri');
+        }
+    });
+});
+</script>
 {% endblock %}

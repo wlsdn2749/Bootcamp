@@ -28,7 +28,7 @@ def restmenu_list(request, rest_rest_num):
     rest = get_object_or_404(Rest, pk=rest_rest_num)
     restmenu_list = RestMenu.objects.filter(rest_id=rest.rest_num) #RestMenu의 멤버 rest_id는 = rest객체의 rest_num
     context = {'rest': rest,'restmenu_list': restmenu_list}
-    return render(request, 'bootrc/restmenu_list.html', context) # 수정해야함 이부분
+    return render(request, 'bootrc/restmenu_list.html', context)
 
 
 def menu_create(request):
@@ -107,3 +107,29 @@ def signup(request):
     else:
         form=UserForm()
     return render(request,'bootrc/signup.html',{'form':form})
+
+
+def menu_delete(request, menu_menu_num):
+    '''
+    질문삭제
+    '''
+    menu = get_object_or_404(Menu, pk=menu_menu_num)
+    menu.delete()
+    return redirect('bootrc:menu_list')
+
+def rest_delete(request, rest_rest_num):
+    '''
+    메뉴삭제
+    '''
+    rest = get_object_or_404(Rest, pk=rest_rest_num)
+    rest.delete()
+    return redirect('bootrc:rest_list')
+
+def restmenu_delete(request, restmenu_id):
+    '''
+    가게메뉴삭제
+    '''
+    restmenu = get_object_or_404(RestMenu, pk=restmenu_id)
+    restmenu.delete()
+    #return redirect('bootrc:restmenu_list restmenu.rest.rest_num')
+    return redirect('bootrc:rest_list')
