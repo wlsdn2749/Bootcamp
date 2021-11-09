@@ -12,6 +12,8 @@
             <th>경도</th>
             <th>별점</th>
             <th>거리</th>
+            <th>이용자 수</th>
+            <th>리뷰 수</th>
             <th>삭제</th>
         </tr>
         </thead>
@@ -25,6 +27,8 @@
             <td>{{ rest.rest_location_lon }}</td>
             <td>{{ rest.rest_star }}</td>
             <td>test</td>
+            <td>{{ rest.rest_recent_user}}</td>
+            <td>{{ rest.rest_number_reviews}}</td>
             <td><a href="#" data-uri="{% url 'bootrc:rest_delete' rest.rest_num %}"
                class="delete btn btn-sm btn-outline-secondary">삭제</a></td>
 <!--delete href를 #으로 지정하여 확인창을 JS로 구현하기 위해-->

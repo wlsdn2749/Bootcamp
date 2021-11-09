@@ -14,7 +14,7 @@ class MenuForm(forms.ModelForm):
 class RestForm(forms.ModelForm):
     class Meta:
         model = Rest  # 사용할 모델
-        fields = ['rest_name', 'rest_star', 'rest_location_lat', 'rest_location_lon']
+        fields = ['rest_name', 'rest_star', 'rest_location_lat', 'rest_location_lon', 'rest_recent_user', 'rest_number_reviews']
         # RestForm에서 사용할 rest모델의 속성
 
 
