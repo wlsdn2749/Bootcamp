@@ -8,7 +8,7 @@ urlpatterns = [
     path('login',auth_views.LoginView.as_view(template_name='bootrc/login.html'),name='login'), # 로그인 페이지로 이동
     path('logout',auth_views.LogoutView.as_view(),name='logout'), # 로그아웃 기능
     path('signup',views.signup,name='signup'), # 회원가입 페이지로 이동
-    path('bootrc/', views.index, name='index'),
+    path('', views.index, name='index'),
     path('menu/list/', views.menu_list, name='menu_list'),
     path('rest/list/', views.rest_list, name='rest_list'),
     path('menu/create/', views.menu_create, name='menu_create'),
