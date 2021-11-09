@@ -9,6 +9,7 @@
             <th>번호</th>
             <th>가게 이름</th>
             <th>메뉴 이름</th>
+            <th>추천 점수</th>
             <th>삭제</th>
         </tr>
         </thead>
@@ -19,6 +20,7 @@
             <td>{{ restmenu.rest.rest_num }}</td>
             <td>{{ restmenu.rest.rest_name }}</td>
             <td>{{ restmenu.rest_menu }}</td>
+            <td>{{ restmenu.rest_recommend}}</td>
             <td><a href="#" data-uri="{% url 'bootrc:restmenu_delete' restmenu.id %}"
                class="delete btn btn-sm btn-outline-secondary">삭제</a></td>
         </tr>

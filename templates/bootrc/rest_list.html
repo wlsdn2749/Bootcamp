@@ -26,7 +26,7 @@
             <td>{{ rest.rest_location_lat }}</td>
             <td>{{ rest.rest_location_lon }}</td>
             <td>{{ rest.rest_star }}</td>
-            <td>test</td>
+            <td>{{ rest.rest_distance_fromBD}}</td>
             <td>{{ rest.rest_recent_user}}</td>
             <td>{{ rest.rest_number_reviews}}</td>
             <td><a href="#" data-uri="{% url 'bootrc:rest_delete' rest.rest_num %}"

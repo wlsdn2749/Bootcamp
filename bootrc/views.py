@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login # 로그인 및 회원가입 기능을 구현하기 위한 패키지
+from .crawling import Crawling
 from .models import Menu, Rest, RestMenu
 from .forms import MenuForm, RestForm, RestMenuForm, UserForm
 import math
@@ -23,6 +24,9 @@ def rest_list(request):
     context = {'rest_list': rest_list}
     return render(request, 'bootrc/rest_list.html', context)
 
+def crawling(request):
+    Crawling()
+    return redirect('bootrc:index')
 
 def restmenu_list(request, rest_rest_num):
     rest = get_object_or_404(Rest, pk=rest_rest_num)

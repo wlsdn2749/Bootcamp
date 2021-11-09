@@ -146,3 +146,4 @@ cython_debug/
 secret.json
 
 # End of https://www.toptal.com/developers/gitignore/api/python
+/yogiyo_data_for_parsing.json
