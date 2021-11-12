@@ -1,9 +1,7 @@
-{% extends 'base.html' %}
-{% load static %}
+{% extends "base.html" %}
 {% block content %}
-
 <script language="JavaScript1.2">
-    top.document.title="로그인";
+    top.document.title=top.document.title+"-로그인";
 </script>
 <!-- index = 메뉴목록 있는 메인 페이지로 이동 -->
 <a href="{% url 'bootrc:index' %}" class="btn btn-primary top-button">메인 화면 이동</a>
@@ -12,7 +10,6 @@
 <!-- 로그인 창 구성 : 개발중 -->
 <div class="text-center">
 <main class="form-signin">
-  <link href="{% static 'bootstrap.min.css' %}" rel="stylesheet">
   <form method="post" class="post-form" action="{% url 'bootrc:login' %}">
     {%csrf_token%}
     {%include "bootrc/form-error.html"%}
@@ -31,5 +28,4 @@
   </form>
 </main>
 </div>
-
 {% endblock %}
