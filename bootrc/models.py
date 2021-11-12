@@ -31,15 +31,16 @@ class Rest(models.Model):
     rest_location_lon = models.FloatField(default=0)  # 가게 경도
     rest_recent_user = models.IntegerField(default=0)  # 이용자 수
     rest_number_reviews = models.IntegerField(default=0)  # 리뷰 개수
+    rest_distance_fromBD = models.IntegerField(default=0)  # 후문에서 가게 거리
+
     def distance_calc(self):
         school_bd = (35.817094, 127.090152)     # 학교 후문의 위도 경도
         destination = (self.rest_location_lat, self.rest_location_lon)  # 목적지 위도 경도
         distance = haversine(school_bd, destination, unit='m')
         result = int(distance)
         # haversine 은 위도 경도로 거리 계산 함수 from haversine, unit 은 거리 표현 방법
+        self.rest_distance_fromBD = result
         return result
-
-    rest_distance_fromBD = property(distance_calc)  # 후문에서 가게 거리 계산
 
 
 class RestMenu(models.Model):

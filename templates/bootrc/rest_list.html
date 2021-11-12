@@ -3,6 +3,7 @@
 1<link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
 {% block content %}
 <div class="container my-3">
+    <a href="{% url 'bootrc:index' %}" class="btn btn-primary">메인으로 이동</a>
     <table class="table">
         <thead>
         <tr class="thead-dark">
@@ -26,7 +27,7 @@
             <td>{{ rest.rest_location_lat }}</td>
             <td>{{ rest.rest_location_lon }}</td>
             <td>{{ rest.rest_star }}</td>
-            <td>{{ rest.rest_distance_fromBD}}</td>
+            <td>{{ rest.distance_calc}}</td>
             <td>{{ rest.rest_recent_user}}</td>
             <td>{{ rest.rest_number_reviews}}</td>
             <td><a href="#" data-uri="{% url 'bootrc:rest_delete' rest.rest_num %}"
