@@ -1,3 +1,17 @@
+body{
+    margin:10px;
+}
+.menu{
+    color:white;
+    text-decoration:none;
+}
+.menu:hover{
+    color:yellow;
+    text-decoration:none;
+}
+.nav-bottom-resize{
+    margin-bottom:10px;
+}
 .login_style{
     margin:0 auto;
 }
