@@ -40,6 +40,7 @@ class Rest(models.Model):
         result = int(distance)
         # haversine 은 위도 경도로 거리 계산 함수 from haversine, unit 은 거리 표현 방법
         self.rest_distance_fromBD = result
+        self.save()
         return result
 
 

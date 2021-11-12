@@ -67,13 +67,10 @@ def rest_create(request):
         if form.is_valid():
             menu = form.save()
             menu.save()
-            rest_n = Rest.objects.all()
-            school_bd = (35.817094, 127.090152)  # 학교 후문의 위도 경도
-            destination = (rest_n.rest_location_lat, rest_n.rest_location_lon)  # 목적지 위도 경도
-            distance = haversine(school_bd, destination, unit='m')
-            result = int(distance)
-            # haversine 은 위도 경도로 거리 계산 함수 from haversine, unit 은 거리 표현 방법
-            Rest.rest_distance_fromBD = result
+            rest_list = Rest.objects.order_by('rest_num')
+            if rest_list:
+                for rest in rest_list:
+                    rest.distance_calc()
             return redirect('bootrc:index')
     else:
         form = RestForm()
