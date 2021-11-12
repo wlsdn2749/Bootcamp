@@ -19,5 +19,6 @@ urlpatterns = [
     path('menu/delete/<int:menu_menu_num>', views.menu_delete, name='menu_delete'),
     path('rest/delete/<int:rest_rest_num>', views.rest_delete, name='rest_delete'),
     path('crawling', views.crawling, name='crawling'),
+    path('recommendmenu', views.recommendmenu, name='recommendmenu'),
     path('restmenu/delete/<int:restmenu_id>', views.restmenu_delete, name='restmenu_delete')
 ]

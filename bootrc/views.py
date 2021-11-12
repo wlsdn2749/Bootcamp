@@ -24,6 +24,12 @@ def rest_list(request):
     context = {'rest_list': rest_list}
     return render(request, 'bootrc/rest_list.html', context)
 
+def recommendmenu(request):
+    restmenu_list = RestMenu.objects.order_by('-recommendmenu')
+    context = {'restmenu_list': restmenu_list}
+    return render(request, 'bootrc/recommend_list.html', context)
+
+
 def crawling(request):
     Crawling()
     return redirect('bootrc:index')
@@ -75,6 +81,7 @@ def restmenu_create(request, rest_rest_num):
         if form.is_valid():
             restmenu = form.save(commit=False)
             restmenu.rest = rest
+            restmenu.recommend_calc()
             restmenu.save()
             return redirect('bootrc:restmenu_list', rest_rest_num)
     else:

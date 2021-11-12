@@ -46,6 +46,8 @@ class RestMenu(models.Model):
     rest = models.ForeignKey(Rest, on_delete=models.CASCADE)  # 가게를 나타내는 foreignkey
     rest_menu = models.CharField(max_length=30)  # 가게 메뉴
     price = models.IntegerField(default=0)
+    recommendmenu = models.FloatField(default=0)
+
     def recommend_calc(self):
         result = (
             self.rest.rest_star * 2 +# 별점 가중치 25%
@@ -54,8 +56,9 @@ class RestMenu(models.Model):
             self.rest.rest_number_reviews / 100 # 리뷰 개수 가중치 25%
             # + 유저의 좋거나 싫거나 하는?
         )
-        return result
-    rest_recommend = property(recommend_calc)
+        self.recommendmenu = result
+        self.save()
+
 
 
 # 아직 안만듬

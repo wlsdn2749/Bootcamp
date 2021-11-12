@@ -20,7 +20,7 @@
             <td>{{ restmenu.rest.rest_num }}</td>
             <td>{{ restmenu.rest.rest_name }}</td>
             <td>{{ restmenu.rest_menu }}</td>
-            <td>{{ restmenu.recommendmenu}}</td>
+            <td>{{ restmenu.recommendmenu }}</td>
             <td><a href="#" data-uri="{% url 'bootrc:restmenu_delete' restmenu.id %}"
                class="delete btn btn-sm btn-outline-secondary">삭제</a></td>
         </tr>
@@ -32,7 +32,6 @@
         {% endif %}
         </tbody>
     </table>
-    <a href="{% url 'bootrc:restmenu_create' rest.rest_num %}" class="btn btn-primary">메뉴 만들기</a>
 </div>
 {% endblock %}
 <!--JS-->
