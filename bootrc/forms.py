@@ -30,3 +30,5 @@ class UserForm(UserCreationForm):
         model = User
         fields = ("username", "password1", "password2")
 
+
+

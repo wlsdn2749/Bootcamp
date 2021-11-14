@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 from django.contrib.auth import views as auth_views #django의 자체 로그인 기능 사용
+from . import models
 
 app_name = 'bootrc'
 

@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login # 로그인 및 회원가입
 from .crawling import Crawling
 from .models import Menu, Rest, RestMenu
 from .forms import MenuForm, RestForm, RestMenuForm, UserForm
+import random
 import math
 from haversine import haversine  # haversine 은 위도 경도로 거리 계산 함수
 # pip install haversine 이 필요하다
@@ -115,8 +116,10 @@ def signup(request):
 
 def menu_favorite(request):  # 음식 선호도 조사
     menu_list = Menu.objects.order_by('menu_num')
+    list = Menu.objects.order_by('?')
     current_user = request.user
-    context = {'menu_list': menu_list}
+    number = random.randrange(1, 45)
+    context = {'menu_list': menu_list, 'number': number, 'list': list[0:5]}
     return render(request, 'bootrc/menu_list_favorite_select.html', context)
 
 

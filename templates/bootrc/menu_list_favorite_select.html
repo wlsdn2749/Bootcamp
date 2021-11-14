@@ -9,7 +9,7 @@
             <th>메뉴 번호</th>
             <th>카테고리 번호</th>
             <th>메뉴</th>
-            <th>삭제</th>
+            <th>선택</th>
         </tr>
         </thead>
         <tbody>
@@ -20,18 +20,52 @@
             <td>{{ menu.menu_catenum }}</td>
             <td>{{ menu.menu_name2 }}</td>
             <td><a href="#" data-uri="{% url 'bootrc:menu_delete' menu.menu_num %}"
-               class="delete btn btn-sm btn-outline-secondary">삭제</a></td>
+               class="delete btn btn-sm btn-outline-secondary">선택</a></td>
 <!--delete href를 #으로 지정하여 확인창을 JS로 구현하기 위해-->
         </tr>
         {% endfor %}
         {% else %}
         <tr>
-            <td colspan="3">질문이 없습니다.</td>
+            <td colspan="3">메뉴가 없습니다.</td>
         </tr>
         {% endif %}
         </tbody>
     </table>
 <!--    <a href="{% url 'bootrc:menu_create' %}" class="btn btn-primary">메뉴 만들기</a>-->
+</div>
+<div class="container my-4">
+    <table class="table">
+        <thead>
+        <tr class="table-dark">
+            <th style="width: 25%">메뉴</th>
+            <th style="width: 15%">선호 점수</th>
+            <th style="width: 15%"></th>
+            <th style="width: 15%"></th>
+            <th style="width: 15%"></th>
+            <th style="width: 15%"></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% if list %}
+        {% for i in list %}
+        <tr class="thead-dark">
+            <td>{{ i.menu_name2 }}</td>
+            <td><label><input type="radio" name="selected" value="-2"> -2</label></td>
+            <td><label><input type="radio" name="selected" value="-1"> -1</label></td>
+            <td><label><input type="radio" name="selected" value="0"> 0</label></td>
+            <td><label><input type="radio" name="selected" value="+1"> +1</label></td>
+            <td><label><input type="radio" name="selected" value="+2"> +2</label></td>
+        </tr>
+        {% endfor %}
+        {% else %}
+        <tr>
+            <td>알고리즘 에러 코드 수정 필요</td>
+        </tr>
+        {% endif %}
+        </tbody>
+    </table>
+    <label>테스트 : 랜덤으로 뽑힌 숫자는 {{ number }}</label>
+    <button type="submit" class="btn btn-primary" style="display: block; margin:auto">저장하기</button>
 </div>
 {% endblock %}
 <!--JS-->

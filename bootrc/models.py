@@ -20,7 +20,7 @@ class Menu(models.Model):
 class Prefer(models.Model):
     user_num = models.IntegerField()  # 유저이름 (foreign key)
     pref_menu = models.IntegerField()  # 선호하는 메뉴 (foreign ? )
-    pref_mod = models.IntegerField()  # 선호하는지 안하는지 0 : 선호 1: 비선호
+    pref_like = models.IntegerField()  # 선호하는지 안하는지 -2 ~ +2
 
 
 class Rest(models.Model):
