@@ -17,18 +17,23 @@
         <tbody>
         {% if list2 %}
         <form method="post" class="post-form my-3">
-            {% csrf_token %}
+        {% csrf_token %}
         {% for i in list2 %}
         <tr class="thead-dark">
             <div class="form-group">
-                <td>{{ i.menu_name2 }}</td>
+                <td>{{i.menu_name2}}</td>
             </div>
             <div class="form-group">
-                <td><label><input type="radio" name={{ i.menu_name2 }} vlaue="-2"> -2</label></td>
-                <td><label><input type="radio" name={{ i.menu_name2 }} value="-1"> -1</label></td>
-                <td><label><input type="radio" name={{ i.menu_name2 }} value="0"> 0</label></td>
-                <td><label><input type="radio" name={{ i.menu_name2 }} value="+1"> +1</label></td>
-                <td><label><input type="radio" name={{ i.menu_name2 }} value="+2"> +2</label></td>
+                <td><label><input type="radio" name={{ i.menu_name2 }}
+                                  id={{ pref_like.i }} vlaue="-2"> -2</label></td>
+                <td><label><input type="radio" name={{ i.menu_name2 }}
+                                  id={{ pref_like.i }} value="-1"> -1</label></td>
+                <td><label><input type="radio" name={{ i.menu_name2 }}
+                                  id={{ pref_like.i }} value="0"> 0</label></td>
+                <td><label><input type="radio" name={{ i.menu_name2 }}
+                                  id={{ pref_like.i }} value="+1"> +1</label></td>
+                <td><label><input type="radio" name={{ i.menu_name2 }}
+                                  id={{ pref_like.i }} value="+2"> +2</label></td>
             </div>
         </tr>
         {% endfor %}
@@ -38,10 +43,9 @@
         </tr>
         {% endif %}
         <button type="submit" class="btn btn-primary" style="display: block;
-        position: absolute; top:50%; left:50%" >저장하기</button>
+        position: absolute; top:90%; left:50%" >저장하기</button>
     </form>
     </table>
-    <label>테스트 : 랜덤으로 뽑힌 숫자는 {{ number }}</label>
     </tbody>
 </div>
 {% endblock %}
