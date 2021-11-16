@@ -118,7 +118,7 @@ def menu_favorite(request):  # 음식 선호도 조사
     list2 = Menu.objects.order_by('?')
     current_user = request.user
     number = random.randrange(1, 45)
-    context = {'number': number, 'list2': list2[0:5]}
+    context = {'number': number, 'list2': list2[0:5], 'current_user': current_user}
     if request.method == "POST":
         form = PreferForm(request.POST)
         if form.is_valid():

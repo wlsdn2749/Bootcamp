@@ -9,6 +9,7 @@ from django.db import models
 from math import *
 from haversine import haversine  # haversine 은 위도 경도로 거리 계산 함수
 # pip install haversine 이 필요하다
+from django.contrib.auth.models import User
 
 
 class Menu(models.Model):
@@ -18,7 +19,7 @@ class Menu(models.Model):
 
 
 class Prefer(models.Model):
-    user_num = models.IntegerField()  # 유저이름 (foreign key)
+    user_num = models.ForeignKey(User, on_delete=models.CASCADE)  # 유저이름 (foreign key)
     pref_menu = models.IntegerField()  # 선호하는 메뉴 (foreign ? )
     pref_like = models.IntegerField()  # 선호하는지 안하는지 -2 ~ +2
 
