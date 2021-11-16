@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login # 로그인 및 회원가입 기능을 구현하기 위한 패키지
 from .crawling import Crawling
 from .models import Menu, Rest, RestMenu
-from .forms import MenuForm, RestForm, RestMenuForm, UserForm
+from .forms import MenuForm, RestForm, RestMenuForm, UserForm, PreferForm
 import random
 import math
 from haversine import haversine  # haversine 은 위도 경도로 거리 계산 함수
@@ -115,11 +115,18 @@ def signup(request):
 
 
 def menu_favorite(request):  # 음식 선호도 조사
-    menu_list = Menu.objects.order_by('menu_num')
-    list = Menu.objects.order_by('?')
+    list2 = Menu.objects.order_by('?')
     current_user = request.user
     number = random.randrange(1, 45)
-    context = {'menu_list': menu_list, 'number': number, 'list': list[0:5]}
+    context = {'number': number, 'list2': list2[0:5]}
+    if request.method == "POST":
+        form = PreferForm(request.POST)
+        if form.is_valid():
+            pref = form.save()
+            pref.save()
+            return redirect('bootrc:index')
+    else:
+        form = PreferForm()
     return render(request, 'bootrc/menu_list_favorite_select.html', context)
 
 

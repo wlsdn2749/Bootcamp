@@ -1,5 +1,5 @@
 from django import forms
-from .models import Menu, Rest, RestMenu
+from .models import Menu, Rest, RestMenu, Prefer
 # 회원가입에서 사용함.
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
@@ -31,4 +31,8 @@ class UserForm(UserCreationForm):
         fields = ("username", "password1", "password2")
 
 
+class PreferForm(forms.ModelForm):  # 유저 메뉴 선호도 조사
+    class Meta:
+        model = Prefer
+        fields = ['pref_menu', 'pref_like']
 

@@ -61,12 +61,3 @@ class RestMenu(models.Model):
         self.recommendmenu = result
         self.save()
 
-
-
-# 아직 안만듬
-class User(models.Model):
-    user_num = models.AutoField(primary_key=True)
-    id = models.CharField(max_length=20)
-    password = models.CharField(max_length=30)
-    nickname = models.CharField(max_length=10)
-    email = models.CharField(max_length=100)
