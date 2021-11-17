@@ -1,6 +1,6 @@
 import requests
 import json
-from .models import Rest
+from .models import Rest, Review
 
 lat = 35.81708   # 위도
 lng = 127.09063   # 경도
@@ -41,7 +41,7 @@ class Crawling:
             #    'list_info': list_info_dict[page_id],
                  'restaurant_results': self.get_response_json_data(restaurant_api_url),
             #    'restaurant_info_results': self.get_response_json_data(restaurant_info_api_url),
-            #    'review_results': self.get_response_json_data(review_api_url),
+                 'review_results': self.get_response_json_data(review_api_url),
             #    'menu_results': self.get_response_json_data(menu_api_url),
             #    'avgrating_results': self.get_response_json_data(avgrating_url),
             }
@@ -67,11 +67,13 @@ class Crawling:
         with open('yogiyo_data_for_parsing.json', 'r', encoding='utf-8') as file:
             json_data = json.load(file)
         for restaurant_data in json_data:
-        #for i in range(0, len(json_data)):
+        #for i in range(126, len(json_data)):
             #restaurant_data = json_data[i]
             restaurant_results = restaurant_data['restaurant_results']
+            review_results = restaurant_data['review_results']
 
-            self.restaurant_parsing(restaurant_results)
+            restaurant = self.restaurant_parsing(restaurant_results)
+            self.review_parsing(review_results, restaurant)
 
     def restaurant_parsing(self, restaurant_results):
         #레스토랑 정보 db modeling
@@ -89,3 +91,26 @@ class Crawling:
             rest_number_reviews = review_count
         )
         restaurant.save()
+        return restaurant
+
+    def review_parsing(self, review_results, restaurant):
+        for i in range(5):
+            try:
+                review_dict = review_results[i]
+            except IndexError:
+                break
+
+            try :
+                slash = review_dict['menu_summary'].find('/')
+            except :
+                slash = 100
+
+            review = Review(
+                restaurant=restaurant,
+                comment = review_dict['comment'][:298],
+                rating=review_dict['rating'],
+                menu_name=review_dict['menu_summary'][:slash],
+                like_count=review_dict['like_count'],
+            )
+            review.save()
+

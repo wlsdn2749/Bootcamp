@@ -8,7 +8,7 @@
 from django.db import models
 from math import *
 from haversine import haversine  # haversine 은 위도 경도로 거리 계산 함수
-# pip install haversine 이 필요하다
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import User
 
 
@@ -61,4 +61,16 @@ class RestMenu(models.Model):
         )
         self.recommendmenu = result
         self.save()
+
+class Review(models.Model):
+    restaurant = models.ForeignKey('Rest', on_delete=models.CASCADE, related_name='review') # 리뷰의 가게 foreginkey
+    comment = models.CharField(max_length=300) # 리뷰내용
+    rating = models.PositiveIntegerField(default=0)#(vaildators=[MinValueValidator(0), MaxValueValidator(5)]) # 리뷰의 별점
+    menu_name = models.CharField(max_length=100) # 리뷰한 메뉴이름
+    created = models.DateTimeField(auto_now_add=True) # 작성일이 언제인지
+    like_count = models.PositiveIntegerField(default=0) #리뷰의 좋아요 갯수
+
+    class Meta:
+        ordering = ['-id']
+
 
