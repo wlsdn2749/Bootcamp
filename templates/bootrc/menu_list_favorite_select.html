@@ -15,26 +15,40 @@
         </tr>
         </thead>
         <tbody>
-        {% if list2 %}
+        {% if random_menulist %}
         <form method="post" class="post-form my-3">
         {% csrf_token %}
-        {% for i in list2 %}
+        <!-- 오류표시 Start -->
+        {% if form.errors %}
+            <div class="alert alert-danger" role="alert">
+            {% for field in form %}
+                {% if field.errors %}
+                <strong>{{ field.label }}</strong>
+                {{ field.errors }}
+                {% endif %}
+            {% endfor %}
+            </div>
+        {% endif %}
+        {% for menu in random_menulist %}
         <tr class="thead-dark">
             <div class="form-group">
-                <td>{{i.menu_name2}}</td>
+                <td>{{menu.menu_name2}}</td>
             </div>
-            <div class="form-group">
-                <td><label><input type="radio" name={{ i.menu_name2 }}
-                                  id={{ pref_like.i }} vlaue="-2"> -2</label></td>
-                <td><label><input type="radio" name={{ i.menu_name2 }}
-                                  id={{ pref_like.i }} value="-1"> -1</label></td>
-                <td><label><input type="radio" name={{ i.menu_name2 }}
-                                  id={{ pref_like.i }} value="0"> 0</label></td>
-                <td><label><input type="radio" name={{ i.menu_name2 }}
-                                  id={{ pref_like.i }} value="+1"> +1</label></td>
-                <td><label><input type="radio" name={{ i.menu_name2 }}
-                                  id={{ pref_like.i }} value="+2"> +2</label></td>
-            </div>
+<!--            <div class="form-group">    &lt;!&ndash;pref_menu , pref_like&ndash;&gt;-->
+<!--                <label for="pref_like"></label>-->
+<!--                <td><label><input type="radio" name={{ menu.menu_name2 }} -->
+<!--                                  value="0"> 매우 싫다</label></td> &lt;!&ndash; 0일경우엔 추천 리스트에서&ndash;&gt;-->
+<!--                <td><label><input type="radio" name={{ menu.menu_name2 }}-->
+<!--                                  value="1"> 조금 싫다</label></td>-->
+<!--                <td><label><input type="radio" name={{ menu.menu_name2 }} -->
+<!--                                  value="2"> 보통</label></td>-->
+<!--                <td><label><input type="radio" name={{ menu.menu_name2 }} -->
+<!--                                  value="3"> 조금 좋다</label></td>-->
+<!--                <td><label><input type="radio" name={{ menu.menu_name2 }}-->
+<!--                                  value="4"> 매우 좋다</label></td>-->
+<!--            </div>-->
+            {{form.as_p}}
+             <button type="submit" class="btn btn-primary">저장기</button>
         </tr>
         {% endfor %}
         {% else %}
@@ -42,8 +56,8 @@
             <td>메뉴가 없습니다 추가 필요</td>
         </tr>
         {% endif %}
-        <button type="submit" class="btn btn-primary" style="display: block;
-        position: absolute; top:90%; left:50%" >저장하기</button>
+<!--        <button type="submit" class="btn btn-primary" style="display: block;-->
+<!--        position: absolute; top:90%; left:50%" >저장하기</button>-->
     </form>
     </table>
     </tbody>

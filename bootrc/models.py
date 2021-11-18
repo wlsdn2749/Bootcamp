@@ -21,7 +21,7 @@ class Menu(models.Model):
 class Prefer(models.Model):
     user_num = models.ForeignKey(User, on_delete=models.CASCADE)  # 유저이름 (foreign key)
     pref_menu = models.ForeignKey(Menu, on_delete=models.CASCADE)  # 선호하는 메뉴 (foreign ? )
-    pref_like = models.IntegerField()  # 선호하는지 안하는지 -2 ~ +2
+    pref_like = models.IntegerField()  # 선호하는지 안하는지 0 ~ +4
 
 
 class Rest(models.Model):

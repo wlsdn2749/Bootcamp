@@ -1,11 +1,12 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login # 로그인 및 회원가입 기능을 구현하기 위한 패키지
 from .crawling import Crawling
-from .models import Menu, Rest, RestMenu, Review
+from .models import Menu, Rest, RestMenu, Review, Prefer
 from .forms import MenuForm, RestForm, RestMenuForm, UserForm, PreferForm
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 import random
 import math
-from haversine import haversine  # haversine 은 위도 경도로 거리 계산 함수
 # pip install haversine 이 필요하다
 
 def main(request):  # 회원, 비회원을 구분하는 페이지
@@ -113,19 +114,19 @@ def signup(request):
         form = UserForm()
     return render(request, 'bootrc/signup.html', {'form': form})
 
-
+@login_required(login_url='bootrc:login')
 def menu_favorite(request):  # 음식 선호도 조사
-    list2 = Menu.objects.order_by('?')
-    current_user = request.user
-    context = {'list2': list2[0:5], 'current_user': current_user}
     if request.method == "POST":
         form = PreferForm(request.POST)
         if form.is_valid():
-            pref = form.save()
-            pref.save()
+            prefer = form.save(commit=False)
+            prefer.save()
             return redirect('bootrc:index')
     else:
         form = PreferForm()
+    random_menulist = Menu.objects.order_by('?')
+    current_user = request.user
+    context = {'random_menulist': random_menulist[0:5], 'current_user': current_user, 'form': form}
     return render(request, 'bootrc/menu_list_favorite_select.html', context)
 
 
