@@ -116,17 +116,19 @@ def signup(request):
 
 @login_required(login_url='bootrc:login')
 def menu_favorite(request):  # 음식 선호도 조사
+    random_menu = Menu.objects.order_by('?').first()
+    current_user = request.user
     if request.method == "POST":
         form = PreferForm(request.POST)
         if form.is_valid():
             prefer = form.save(commit=False)
+            prefer.user_num = current_user
             prefer.save()
             return redirect('bootrc:index')
     else:
         form = PreferForm()
     random_menulist = Menu.objects.order_by('?')
-    current_user = request.user
-    context = {'random_menulist': random_menulist[0:5], 'current_user': current_user, 'form': form}
+    context = {'random_menu': random_menu, 'current_user': current_user, 'form': form}
     return render(request, 'bootrc/menu_list_favorite_select.html', context)
 
 
