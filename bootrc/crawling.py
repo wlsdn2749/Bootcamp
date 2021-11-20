@@ -1,6 +1,6 @@
 import requests
 import json
-from .models import Rest, Review
+from .models import Rest, Review, Menu, RestMenu
 
 lat = 35.81708   # 위도
 lng = 127.09063   # 경도
@@ -42,7 +42,7 @@ class Crawling:
                  'restaurant_results': self.get_response_json_data(restaurant_api_url),
             #    'restaurant_info_results': self.get_response_json_data(restaurant_info_api_url),
                  'review_results': self.get_response_json_data(review_api_url),
-            #    'menu_results': self.get_response_json_data(menu_api_url),
+                 'menu_results': self.get_response_json_data(menu_api_url),
             #    'avgrating_results': self.get_response_json_data(avgrating_url),
             }
 
@@ -71,9 +71,11 @@ class Crawling:
             #restaurant_data = json_data[i]
             restaurant_results = restaurant_data['restaurant_results']
             review_results = restaurant_data['review_results']
+            menu_results = restaurant_data['menu_results']
 
             restaurant = self.restaurant_parsing(restaurant_results)
             self.review_parsing(review_results, restaurant)
+            self.menu_parsing(menu_results, restaurant)
 
     def restaurant_parsing(self, restaurant_results):
         #레스토랑 정보 db modeling
@@ -113,4 +115,35 @@ class Crawling:
                 like_count=review_dict['like_count'],
             )
             review.save()
+    def menu_parsing(self, menu_results, restaurant):
+        """ json에서 메뉴에 대한 정보 파싱 """
+        for menu_group_dict in menu_results:
+            menu_group_name = menu_group_dict['name']
+
+            if menu_group_dict['slug'] == 'photo_menu_item':
+                #photo_menu_items = [item['name'] for item in menu_dict['items']]
+                continue
+
+            if menu_group_dict['slug'] in ('top_items', 'addtional_discount_items'):
+                continue
+
+            # rest_menu = RestMenu(
+            #     rest=restaurant,
+            #     rest_menu=menu_name
+            # )
+            # rest_menu.save()
+
+            for menu_dict in menu_group_dict['items']:
+                menu_name = menu_dict['name'][:28]
+                menu_price = int(menu_dict['price'])
+                # menu_img = menu_dict.get('image')
+                # menu_caption = menu_dict.get('description')
+                rest_menu = RestMenu(
+                    rest = restaurant,
+                    rest_menu = menu_name,
+                    price = menu_price,
+                )
+                rest_menu.save()
+
+
 
