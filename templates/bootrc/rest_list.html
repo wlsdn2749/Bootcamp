@@ -13,7 +13,9 @@
             <th>경도</th>
             <th>별점</th>
             <th>거리</th>
-            <th>이용자 수</th>
+            <th>운영 시간</th>
+            <th>연락처</th>
+            <th>도로명 주소</th>
             <th>리뷰 수</th>
             <th>삭제</th>
         </tr>
@@ -28,7 +30,9 @@
             <td>{{ rest.rest_location_lon }}</td>
             <td>{{ rest.rest_star }}</td>
             <td>{{ rest.distance_calc}}</td>
-            <td>{{ rest.rest_recent_user}}</td>
+            <td>{{ rest.opening_time }} - {{ rest.closing_time }}</td>
+            <td>{{ rest.phone_number }}</td>
+            <td>{{ rest.address }}</td>
             <td>{{ rest.rest_number_reviews}}</td>
             <td><a href="#" data-uri="{% url 'bootrc:rest_delete' rest.rest_num %}"
                class="delete btn btn-sm btn-outline-secondary">삭제</a></td>

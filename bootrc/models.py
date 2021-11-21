@@ -33,6 +33,10 @@ class Rest(models.Model):
     rest_recent_user = models.IntegerField(default=0)  # 이용자 수
     rest_number_reviews = models.IntegerField(default=0)  # 리뷰 개수
     rest_distance_fromBD = models.IntegerField(default=0)  # 후문에서 가게 거리
+    opening_time = models.TimeField(default='00:00')
+    closing_time = models.TimeField(default='00:00')
+    phone_number = models.CharField(max_length=20, default='')
+    address = models.CharField(max_length=255, default='')
 
 
     def distance_calc(self):

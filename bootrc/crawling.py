@@ -1,5 +1,6 @@
 import requests
 import json
+from datetime import datetime
 from .models import Rest, Review, Menu, RestMenu
 
 lat = 35.81708   # 위도
@@ -84,13 +85,23 @@ class Crawling:
         lng = restaurant_results['lng']
         review_count = restaurant_results['review_count']
         review_avg = restaurant_results['review_avg']
+        address = restaurant_results['address']
+        phone_number = restaurant_results['phone']
+        s = restaurant_results['open_time_description'].split(' - ')
+        opening_time = datetime.strptime(s[0], '%H:%M')
+        closing_time = datetime.strptime(s[1], '%H:%M')
+
 
         restaurant = Rest(
             rest_name = name,
             rest_star = review_avg,
             rest_location_lat = lat,
             rest_location_lon = lng,
-            rest_number_reviews = review_count
+            rest_number_reviews = review_count,
+            address = address,
+            phone_number = phone_number,
+            opening_time = opening_time,
+            closing_time = closing_time
         )
         restaurant.save()
         return restaurant
