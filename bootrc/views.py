@@ -29,8 +29,10 @@ def rest_list(request):
     return render(request, 'bootrc/rest_list.html', context)
 
 def recommendmenu(request):
-    restmenu_list = RestMenu.objects.order_by('-recommendmenu')
-    context = {'restmenu_list': restmenu_list}
+    #restmenu = RestMenu.objects.order_by('-recommendmenu').first() #점수가 높은순 1개만 확인
+    restmenu = RestMenu.objects.order_by('?').first() # 랜덤정렬 첫번째
+    review = Review.objects.filter(restaurant_id=restmenu.rest_id).order_by('?').first()
+    context = {'restmenu': restmenu, 'review': review}
     return render(request, 'bootrc/recommend_list.html', context)
 
 
@@ -116,7 +118,7 @@ def signup(request):
 
 @login_required(login_url='bootrc:login')
 def menu_favorite(request):  # 음식 선호도 조사
-    random_menu = Menu.objects.order_by('?').first()
+    random_menu = RestMenu.objects.order_by('?').first() # 랜덤 메뉴 하나
     current_user = request.user
     if request.method == "POST":
         form = PreferForm(request.POST)
@@ -127,7 +129,6 @@ def menu_favorite(request):  # 음식 선호도 조사
             return redirect('bootrc:index')
     else:
         form = PreferForm()
-    random_menulist = Menu.objects.order_by('?')
     context = {'random_menu': random_menu, 'current_user': current_user, 'form': form}
     return render(request, 'bootrc/menu_list_favorite_select.html', context)
 
@@ -140,12 +141,14 @@ def menu_delete(request, menu_menu_num):
     menu.delete()
     return redirect('bootrc:menu_list')
 
-def crawling_review_delete(request):
+def crawling_delete(request):
     '''
-    리뷰 삭제
+    크롤링 데이터 (가게, 메뉴, 리뷰) 삭제
     '''
-    review = Review.objects.all()
-    review.delete()
+    Review.objects.all().delete()
+    RestMenu.objects.all().delete()
+    Rest.objects.all().delete()
+
     return redirect('bootrc:index')
 
 def rest_delete(request, rest_rest_num):

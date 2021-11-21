@@ -35,4 +35,4 @@ class PreferForm(forms.ModelForm):  # 유저 메뉴 선호도 조사
     class Meta:
         model = Prefer
         fields = ['pref_like', 'pref_menu']
-
+        widget = {'pref_menu': forms.HiddenInput()}

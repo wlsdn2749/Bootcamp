@@ -20,7 +20,7 @@ class Menu(models.Model):
 
 class Prefer(models.Model):
     user_num = models.ForeignKey(User, on_delete=models.CASCADE)  # 유저이름 (foreign key)
-    pref_menu = models.ForeignKey(Menu, on_delete=models.CASCADE)  # 선호하는 메뉴 (foreign ? )
+    pref_menu = models.ForeignKey('RestMenu', on_delete=models.CASCADE)  # 선호하는 메뉴 (foreign ? )
     pref_like = models.IntegerField()  # 선호하는지 안하는지 0 ~ +4
 
 
@@ -33,6 +33,7 @@ class Rest(models.Model):
     rest_recent_user = models.IntegerField(default=0)  # 이용자 수
     rest_number_reviews = models.IntegerField(default=0)  # 리뷰 개수
     rest_distance_fromBD = models.IntegerField(default=0)  # 후문에서 가게 거리
+
 
     def distance_calc(self):
         school_bd = (35.817094, 127.090152)     # 학교 후문의 위도 경도
