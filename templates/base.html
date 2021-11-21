@@ -1,4 +1,5 @@
-{% load static %}
+<!-- 기본 템플릿 -->
+{% load static %} <!-- static의 내용 불러옴 -->
 <!doctype html>
 <html lang="ko">
 <head>
@@ -7,26 +8,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
-    <!-- pybo CSS -->
+    <!-- 개별 제작 CSS -->
     <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
     <title>일일 맛집 추천</title>
 </head>
 <body>
-<!-- 공통 적용 부분 -->
 <nav class=" navbar navbar-expand-md navbar-dark bg-dark fixed-top nav-bottom-resize">
-    <div class="collapse navbar-collapse"><a href="/" class="navbar-brand">메인 메뉴</a>
+    <!-- 메인 배너(로고 등) 출력 -->
+    <div class="collapse navbar-collapse"><a href="/" class="navbar-brand">일일 맛집 추천</a>
+        <!-- 로그인 정보 출력 -->
         {% if request.user.is_authenticated %}
         <a href="/logout" class="menu navbar-nav nav-link">로그아웃</a>
+        <strong> 현재 로그인 : {{user.username}} 님 </strong>
         {% else %}
-    <a href="/login" class="menu navbar-nav nav-link">로그인</a>
-    <a href="/signup" class="menu navbar-nav navbar-link">회원가입</a>
+        <a href="/login" class="menu navbar-nav nav-link">로그인</a>
+        <a href="/signup" class="menu navbar-nav navbar-link">회원가입</a>
         {% endif %}
+        <!-- 로그인 정보 출력 끝 -->
     </div>
 </nav>
-<!-- 공통 적용 부분 End -->
 <!-- 기본 템플릿 안에 삽입될 내용 Start -->
 {% block content %}
 {% endblock %}
 <!-- 기본 템플릿 안에 삽입될 내용 End -->
 </body>
 </html>
+<!-- 템플릿 End -->
