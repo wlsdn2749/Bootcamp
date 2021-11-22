@@ -169,4 +169,5 @@ def restmenu_delete(request, restmenu_id):
     #return redirect('bootrc:restmenu_list restmenu.rest.rest_num')
     return redirect('bootrc:rest_list')
 
-
+def admin_tools(request):
+    return render(request, 'bootrc/admin.html')
