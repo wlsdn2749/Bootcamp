@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login # 로그인 및 회원가입 기능을 구현하기 위한 패키지
 from .crawling import Crawling
-from .models import Menu, Rest, RestMenu
+from .models import Menu, Rest, RestMenu, Review
 from .forms import MenuForm, RestForm, RestMenuForm, UserForm, PreferForm
 import random
 import math
@@ -137,6 +137,14 @@ def menu_delete(request, menu_menu_num):
     menu.delete()
     return redirect('bootrc:menu_list')
 
+def crawling_review_delete(request):
+    '''
+    리뷰 삭제
+    '''
+    review = Review.objects.all()
+    review.delete()
+    return redirect('bootrc:index')
+
 def rest_delete(request, rest_rest_num):
     '''
     메뉴삭제
@@ -154,4 +162,5 @@ def restmenu_delete(request, restmenu_id):
     #return redirect('bootrc:restmenu_list restmenu.rest.rest_num')
     return redirect('bootrc:rest_list')
 
-
+def admin_tools(request):
+    return render(request, 'bootrc/admin.html')
