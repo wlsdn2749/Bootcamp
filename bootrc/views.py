@@ -1,6 +1,3 @@
-import datetime
-import time
-
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login # 로그인 및 회원가입 기능을 구현하기 위한 패키지
 from .crawling import Crawling
@@ -38,8 +35,8 @@ def rest_list(request):
 def recommendmenu(request):
     #restmenu = RestMenu.objects.order_by('-recommendmenu').first() #점수가 높은순 1개만 확인
     restmenu = RestMenu.objects.order_by('?').first() # 랜덤정렬 첫번째
-    #review = Review.objects.filter(restaurant_id=restmenu.rest_id).order_by('?').first()
-    context = {'restmenu': restmenu}
+    review = Review.objects.filter(restaurant_id=restmenu.rest_id).order_by('?').first()
+    context = {'restmenu': restmenu, 'review': review}
     return render(request, 'bootrc/recommend_list.html', context)
 
 def recommendmenu2(request):
