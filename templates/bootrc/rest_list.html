@@ -17,6 +17,9 @@
             <th>연락처</th>
             <th>도로명 주소</th>
             <th>리뷰 수</th>
+            <th>사진 메인로고</th>
+            <th>사진 백그라운드</th>
+            <th>카테고리</th></소>
             <th>삭제</th>
         </tr>
         </thead>
@@ -34,6 +37,18 @@
             <td>{{ rest.phone_number }}</td>
             <td>{{ rest.address }}</td>
             <td>{{ rest.rest_number_reviews}}</td>
+
+            <td><img src ="/images/{{ rest.image }}/"  height="280" width="180"></td>
+            <td><img src ="/images/{{ rest.back_image }}/" height="280" width="180"></td>
+            <!-- 이미지 주소를 절대로 적었기 때문에 유의해야함!-->
+            <td>
+            {% for category in categories %}
+                {% if category.rest.id == rest.rest_num %}
+                    {{ category.name }}
+                {% endif %}
+            {% endfor %}
+            </td>
+
             <td><a href="#" data-uri="{% url 'bootrc:rest_delete' rest.rest_num %}"
                class="delete btn btn-sm btn-outline-secondary">삭제</a></td>
 <!--delete href를 #으로 지정하여 확인창을 JS로 구현하기 위해-->

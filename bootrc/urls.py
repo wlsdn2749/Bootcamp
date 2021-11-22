@@ -2,6 +2,8 @@ from django.urls import path
 from . import views
 from django.contrib.auth import views as auth_views #django의 자체 로그인 기능 사용
 from . import models
+from django.conf import settings
+from django.conf.urls.static import static
 
 app_name = 'bootrc'
 
@@ -25,3 +27,5 @@ urlpatterns = [
     path('restmenu/delete/<int:restmenu_id>', views.restmenu_delete, name='restmenu_delete'),
     path('menufavorite/', views.menu_favorite, name='menu_select'),
 ]
+if settings.DEBUG:
+        urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

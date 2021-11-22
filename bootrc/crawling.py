@@ -1,7 +1,10 @@
 import requests
 import json
+import tempfile
 from datetime import datetime
-from .models import Rest, Review, Menu, RestMenu
+from django.core import files
+from django.conf import settings
+from .models import Rest, Review, Menu, RestMenu, Categories
 
 lat = 35.81708   # 위도
 lng = 127.09063   # 경도
@@ -90,7 +93,9 @@ class Crawling:
         s = restaurant_results['open_time_description'].split(' - ')
         opening_time = datetime.strptime(s[0], '%H:%M')
         closing_time = datetime.strptime(s[1], '%H:%M')
-
+        restaurant_image = restaurant_results['logo_url']
+        restaurant_back_image = restaurant_results['background_url']
+        categories = restaurant_results['categories']
 
         restaurant = Rest(
             rest_name = name,
@@ -104,6 +109,12 @@ class Crawling:
             closing_time = closing_time
         )
         restaurant.save()
+
+        self.categories_parsing(restaurant, categories)
+        if restaurant_image:
+            restaurant.image.save(*self.save_img('https://www.yogiyo.co.kr' + restaurant_image))
+        if restaurant_back_image:
+            restaurant.back_image.save(*self.save_img(restaurant_back_image))
         return restaurant
 
     def review_parsing(self, review_results, restaurant):
@@ -156,5 +167,26 @@ class Crawling:
                 )
                 rest_menu.save()
 
+    def categories_parsing(self, restaurant, categories):
+        for category in categories:
+            cate = Categories(
+                rest = restaurant,
+                name = category,
+            )
+            cate.save()
 
+    def save_img(self, image_url):
+        request = requests.get(image_url, stream=True)
+        if request.status_code != requests.codes.ok:
+            return
+
+        file_name = image_url.split('/')[-1].split('?')[0]
+        lf = tempfile.NamedTemporaryFile()
+
+        for block in request.iter_content(1024 * 8):
+            if not block:
+                break
+            lf.write(block)
+
+        return file_name, files.File(lf)
 

@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login # 로그인 및 회원가입 기능을 구현하기 위한 패키지
 from .crawling import Crawling
-from .models import Menu, Rest, RestMenu, Review, Prefer
+from .models import Menu, Rest, RestMenu, Review, Prefer, Categories
 from .forms import MenuForm, RestForm, RestMenuForm, UserForm, PreferForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -25,7 +25,8 @@ def menu_list(request):
 
 def rest_list(request):
     rest_list = Rest.objects.order_by('rest_num')
-    context = {'rest_list': rest_list}
+    categories = Categories.objects.all()
+    context = {'rest_list': rest_list, 'categories':categories}
     return render(request, 'bootrc/rest_list.html', context)
 
 def recommendmenu(request):

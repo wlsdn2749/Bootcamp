@@ -9,6 +9,8 @@
             <th>번호</th>
             <th>가게 이름</th>
             <th>메뉴 이름</th>
+            <th>가게 메인 사진</th>
+            <th>가게 백그라운드 사진</th>
             <th>추천 점수</th>
             <th>리뷰한 메뉴</th>
             <th>리뷰</th>
@@ -21,6 +23,9 @@
             <td>{{ restmenu.rest.rest_num }}</td>
             <td>{{ restmenu.rest.rest_name }}</td>
             <td>{{ restmenu.rest_menu }}</td>
+            <td><img src ="/images/{{ restmenu.rest.image }}/"  height="180" width="180"></td>
+            <td><img src ="/images/{{ restmenu.rest.back_image }}/" height="180" width="180"></td>
+            <!-- 이미지 주소를 절대로 적었기 때문에 유의해야함!-->
             <td>{{ restmenu.recommendmenu }}</td>
             <td>{{ review.menu_name}}</td>
             <td>{{ review.comment }}</td>

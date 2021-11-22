@@ -23,7 +23,6 @@ class Prefer(models.Model):
     pref_menu = models.ForeignKey('RestMenu', on_delete=models.CASCADE)  # 선호하는 메뉴 (foreign ? )
     pref_like = models.IntegerField()  # 선호하는지 안하는지 0 ~ +4
 
-
 class Rest(models.Model):
     rest_num = models.AutoField(primary_key=True)  # 가게 고유번호 (primary : autofield)
     rest_name = models.CharField(max_length=30)  # 가게 이름
@@ -38,6 +37,9 @@ class Rest(models.Model):
     phone_number = models.CharField(max_length=20, default='')
     address = models.CharField(max_length=255, default='')
 
+    image = models.ImageField(upload_to='restaurant_image', null=True, blank=True)
+    back_image = models.ImageField(upload_to='restaurant_back_image', null=True, blank=True)
+
 
     def distance_calc(self):
         school_bd = (35.817094, 127.090152)     # 학교 후문의 위도 경도
@@ -50,10 +52,15 @@ class Rest(models.Model):
         return result
 
 
+def menu_img_path(instance, filename):
+    filename = filename.split('?')[0]
+    return f'menu_img/{filename}'
+
 class RestMenu(models.Model):
     rest = models.ForeignKey(Rest, on_delete=models.CASCADE)  # 가게를 나타내는 foreignkey
     rest_menu = models.CharField(max_length=30)  # 가게 메뉴
     price = models.IntegerField(default=0)
+    image = models.ImageField(upload_to='menu_image', null=True, blank=True, max_length=400)
     recommendmenu = models.FloatField(default=0)
 
     def recommend_calc(self):
@@ -79,3 +86,6 @@ class Review(models.Model):
         ordering = ['-id']
 
 
+class Categories(models.Model):
+    name = models.CharField(max_length=300)
+    rest = models.ForeignKey('Rest',on_delete=models.CASCADE, related_name='categories')
