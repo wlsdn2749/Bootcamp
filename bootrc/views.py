@@ -1,3 +1,5 @@
+import datetime
+
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login # 로그인 및 회원가입 기능을 구현하기 위한 패키지
 from .crawling import Crawling
@@ -5,6 +7,7 @@ from .models import Menu, Rest, RestMenu, Review, Prefer, Categories
 from .forms import MenuForm, RestForm, RestMenuForm, UserForm, PreferForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from time import gmtime, strftime
 import random
 import math
 from haversine import haversine  # haversine 은 위도 경도로 거리 계산 함수
@@ -33,9 +36,51 @@ def rest_list(request):
 def recommendmenu(request):
     #restmenu = RestMenu.objects.order_by('-recommendmenu').first() #점수가 높은순 1개만 확인
     restmenu = RestMenu.objects.order_by('?').first() # 랜덤정렬 첫번째
-    review = Review.objects.filter(restaurant_id=restmenu.rest_id).order_by('?').first()
-    context = {'restmenu': restmenu, 'review': review}
+    #review = Review.objects.filter(restaurant_id=restmenu.rest_id).order_by('?').first()
+    context = {'restmenu': restmenu}
     return render(request, 'bootrc/recommend_list.html', context)
+
+# 도보 분당 63m
+def recom_menu():
+    i = -1
+    now = strftime("%H:%M", gmtime())
+    time = datetime.datetime.now()
+    menu_list = RestMenu.objects.order_by('?')
+    while True:
+        i += 1
+        probability = 0.0  # 최종 메뉴 선별 확률( 마지막에 종합된 숫자로 확률 돌림 )
+        rest_star = menu_list[i].rest.rest_star
+        """
+        # 가게 운영시간 기준에 맞지 않으면 다시 불러오기
+        if time + datetime.timedelta(minutes=(menu_list[i].rest.rest_distance_fromBD/63)+60)
+        < menu_list[i].closing_time or 
+        time + datetime.timedelta(minutes=(menu_list[i].rest.rest_distance_fromBD/63))
+        < menu_list[i].opening_time:
+            continue
+        """
+        '''
+        # 도보(기본값)일 경우 가게와 떨어진 거리가 300이하인 경우 확률에 +5%
+        if 도보 == 1 and menu_list[i].rest.rest_distance_fromBD < 300:
+            probaility += 5
+        else if 도보 == 1 and menu_list[i].rest.rest_distance_fromBD > 1000:
+            continue
+        '''
+        # 별점 기준 확률 조정( 낮을 수록 적은 확률 )
+        probability += (rest_star ** 2) * 2
+        result = random.randrange(probability)
+
+        if result <= probability:
+            return menu_list[i]
+        elif i == len(menu_list):
+            i = 0
+            continue
+
+
+
+
+
+
+
 
 
 def crawling(request):
