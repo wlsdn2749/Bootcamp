@@ -23,3 +23,11 @@ body{
     margin-left:20px;
     margin-top:20px;
 }
+.notice{
+    font-size:30px;
+    font-weight:bold;
+}
+.main_button{
+    width:200px;
+    height:200px;
+}
