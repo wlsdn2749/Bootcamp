@@ -36,6 +36,7 @@ class Rest(models.Model):
     closing_time = models.TimeField(default='00:00')
     phone_number = models.CharField(max_length=20, default='')
     address = models.CharField(max_length=255, default='')
+    yogiyo_id = models.IntegerField(default=0)
 
     image = models.ImageField(upload_to='restaurant_image', null=True, blank=True)
     back_image = models.ImageField(upload_to='restaurant_back_image', null=True, blank=True)

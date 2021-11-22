@@ -96,6 +96,7 @@ class Crawling:
         restaurant_image = restaurant_results['logo_url']
         restaurant_back_image = restaurant_results['background_url']
         categories = restaurant_results['categories']
+        yogiyo_id = restaurant_results['id']
 
         restaurant = Rest(
             rest_name = name,
@@ -106,7 +107,8 @@ class Crawling:
             address = address,
             phone_number = phone_number,
             opening_time = opening_time,
-            closing_time = closing_time
+            closing_time = closing_time,
+            yogiyo_id = yogiyo_id,
         )
         restaurant.save()
 
