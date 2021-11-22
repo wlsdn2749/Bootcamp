@@ -13,6 +13,7 @@
             <th>가게 백그라운드 사진</th>
             <th>추천 점수</th>
             <th>리뷰한 메뉴</th>
+            <th>지도</th>
             <th>리뷰</th>
             <th>삭제</th>
         </tr>
@@ -28,6 +29,27 @@
             <!-- 이미지 주소를 절대로 적었기 때문에 유의해야함!-->
             <td>{{ restmenu.recommendmenu }}</td>
             <td>{{ review.menu_name}}</td>
+            <td><div id="map" style="width:500px;height:400px;"></div></td>
+            <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=e484d23c5256509bb404015ea2639044"></script>
+                <script>
+                    var container = document.getElementById('map');
+                    var options = {
+                        center: new kakao.maps.LatLng( {{restmenu.rest.rest_location_lat}}, {{restmenu.rest.rest_location_lon}}),
+                        level: 3
+                    };
+                    var map = new kakao.maps.Map(container, options);
+
+                    var markerPosition  = new kakao.maps.LatLng( {{restmenu.rest.rest_location_lat}}, {{restmenu.rest.rest_location_lon}});
+
+                    // 마커를 생성합니다
+                    var marker = new kakao.maps.Marker({
+                        position: markerPosition
+                    });
+
+                    // 마커가 지도 위에 표시되도록 설정합니다
+                    marker.setMap(map);
+                </script>
+            </script>
             <td>{{ review.comment }}</td>
             <td><a href="#" data-uri="{% url 'bootrc:restmenu_delete' restmenu.id %}"
                class="delete btn btn-sm btn-outline-secondary">삭제</a></td>
