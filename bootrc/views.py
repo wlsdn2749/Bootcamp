@@ -49,6 +49,7 @@ def recommendmenu2(request):
 # 도보 분당 63m
 def recom_menu():
     i = 0
+    probaility = 0.0
     now = strftime("%H:%M", gmtime())
     menu_list = RestMenu.objects.order_by('?')
     while True:
@@ -60,15 +61,15 @@ def recom_menu():
         < menu_list[i].closing_time or 
         time + datetime.timedelta(minutes=(menu_list[i].rest.rest_distance_fromBD/63))
         < menu_list[i].opening_time:
+            i += 1
             continue
         """
-        '''
         # 도보(기본값)일 경우 가게와 떨어진 거리가 300이하인 경우 확률에 +5%
-        if 도보 == 1 and menu_list[i].rest.rest_distance_fromBD < 300:
+        if menu_list[i].rest.rest_distance_fromBD < 300:
             probaility += 5
-        else if 도보 == 1 and menu_list[i].rest.rest_distance_fromBD > 1000:
+        elif menu_list[i].rest.rest_distance_fromBD > 1000:
+            i += 1
             continue
-        '''
         # 별점 기준 확률 조정( 낮을 수록 적은 확률 )
         probability += (rest_star ** 2) * 2
         result = random.randrange(0, 100)
@@ -79,7 +80,6 @@ def recom_menu():
             i += 1
         if i == len(menu_list):
             i = 0
-            continue
 
 
 def crawling(request):
