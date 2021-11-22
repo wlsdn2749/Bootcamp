@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 import random
 import math
+from haversine import haversine  # haversine 은 위도 경도로 거리 계산 함수
 # pip install haversine 이 필요하다
 
 def main(request):  # 회원, 비회원을 구분하는 페이지
@@ -169,4 +170,5 @@ def restmenu_delete(request, restmenu_id):
     #return redirect('bootrc:restmenu_list restmenu.rest.rest_num')
     return redirect('bootrc:rest_list')
 
-
+def admin_tools(request):
+    return render(request, 'bootrc/admin.html')
