@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 from django.contrib.auth import views as auth_views #django의 자체 로그인 기능 사용
 from . import models
+from django.conf.urls.static import static #이미지 로드에 사용
 
 app_name = 'bootrc'
 
@@ -20,7 +21,9 @@ urlpatterns = [
     path('menu/delete/<int:menu_menu_num>', views.menu_delete, name='menu_delete'),
     path('rest/delete/<int:rest_rest_num>', views.rest_delete, name='rest_delete'),
     path('crawling', views.crawling, name='crawling'),
+    path('crawling_review_delete', views.crawling_review_delete, name='crawling_review_delete'),
     path('recommendmenu', views.recommendmenu, name='recommendmenu'),
     path('restmenu/delete/<int:restmenu_id>', views.restmenu_delete, name='restmenu_delete'),
     path('menufavorite/', views.menu_favorite, name='menu_select'),
+    path('tools',views.admin_tools,name='admin_tools')
 ]
