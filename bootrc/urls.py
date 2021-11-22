@@ -26,6 +26,7 @@ urlpatterns = [
     path('recommendmenu', views.recommendmenu, name='recommendmenu'),
     path('restmenu/delete/<int:restmenu_id>', views.restmenu_delete, name='restmenu_delete'),
     path('menufavorite/', views.menu_favorite, name='menu_select'),
+    path('recom_menu_test/', views.recommendmenu2, name='recommendmenu2'),
 ]
 if settings.DEBUG:
         urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

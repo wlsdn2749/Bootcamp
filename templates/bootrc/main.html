@@ -10,6 +10,7 @@
         <a href="{% url 'bootrc:crawling' %}" class="btn btn-primary">크롤링</a>
         <a href="{% url 'bootrc:crawling_delete' %}" class="btn btn-primary">크롤링 삭제</a>
         <a href="{% url 'bootrc:recommendmenu' %}" class="btn btn-primary">메뉴 추천</a>
+        <a href="{% url 'bootrc:recommendmenu2' %}" class="btn btn-primary">추천 받기 테스트</a>
         {% if user.is_authenticated %}
         <a href="{% url 'bootrc:logout' %}" class="btn btn-primary">로그아웃</a>
         <span><strong> 현재 로그인 : {{user.username}} 님 </strong></span>

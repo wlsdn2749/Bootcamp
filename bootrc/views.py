@@ -1,4 +1,5 @@
 import datetime
+import time
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login # 로그인 및 회원가입 기능을 구현하기 위한 패키지
@@ -7,7 +8,8 @@ from .models import Menu, Rest, RestMenu, Review, Prefer, Categories
 from .forms import MenuForm, RestForm, RestMenuForm, UserForm, PreferForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from time import gmtime, strftime
+from time import *
+from datetime import *
 import random
 import math
 from haversine import haversine  # haversine 은 위도 경도로 거리 계산 함수
@@ -40,14 +42,19 @@ def recommendmenu(request):
     context = {'restmenu': restmenu}
     return render(request, 'bootrc/recommend_list.html', context)
 
+def recommendmenu2(request):
+    menu = recom_menu()
+    nowtime = datetime.now().strftime('%H:%M')
+    context = {'menu': menu, 'time': nowtime}
+    return render(request, 'bootrc/recom_menu_test.html', context)
+
+
 # 도보 분당 63m
 def recom_menu():
-    i = -1
+    i = 0
     now = strftime("%H:%M", gmtime())
-    time = datetime.datetime.now()
     menu_list = RestMenu.objects.order_by('?')
     while True:
-        i += 1
         probability = 0.0  # 최종 메뉴 선별 확률( 마지막에 종합된 숫자로 확률 돌림 )
         rest_star = menu_list[i].rest.rest_star
         """
@@ -67,20 +74,15 @@ def recom_menu():
         '''
         # 별점 기준 확률 조정( 낮을 수록 적은 확률 )
         probability += (rest_star ** 2) * 2
-        result = random.randrange(probability)
+        result = random.randrange(0, 100)
 
         if result <= probability:
             return menu_list[i]
-        elif i == len(menu_list):
+        else:
+            i += 1
+        if i == len(menu_list):
             i = 0
             continue
-
-
-
-
-
-
-
 
 
 def crawling(request):
