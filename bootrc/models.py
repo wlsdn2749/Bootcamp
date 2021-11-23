@@ -21,7 +21,11 @@ class Menu(models.Model):
 class Prefer(models.Model):
     user_num = models.ForeignKey(User, on_delete=models.CASCADE)  # 유저이름 (foreign key)
     pref_menu = models.ForeignKey('RestMenu', on_delete=models.CASCADE)  # 선호하는 메뉴 (foreign ? )
-    pref_like = models.IntegerField()  # 선호하는지 안하는지 0 ~ +4
+    pref_like = models.IntegerField()  # 선호하는지 안하는지 0 ~ +
+
+class PreferCate(models.Model):
+    user_num = models.ForeignKey(User, on_delete=models.CASCADE)
+    category = models.CharField(default = '', max_length=30)
 
 class Rest(models.Model):
     rest_num = models.AutoField(primary_key=True)  # 가게 고유번호 (primary : autofield)
