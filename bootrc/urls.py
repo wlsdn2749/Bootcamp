@@ -29,6 +29,7 @@ urlpatterns = [
     path('tools',views.admin_tools,name='admin_tools'),
     path('recom_menu_test/', views.recommendmenu2, name='recommendmenu2'),
     path('app_review/', views.app_review, name='app_review'),
+    path('category_select/', views.category_select, name='category_select'),
 ]
 if settings.DEBUG:
         urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

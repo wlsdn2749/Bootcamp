@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login # 로그인 및 회원가입 기능을 구현하기 위한 패키지
 from .crawling import Crawling
 from django.contrib.auth.decorators import login_required
-from .models import Menu, Rest, RestMenu, Review, Prefer, Categories, recentRecommended, AppReview
+from .models import Menu, Rest, RestMenu, Review, Prefer, Categories, recentRecommended, AppReview, PreferCate
 from .forms import MenuForm, RestForm, RestMenuForm, UserForm, PreferForm, recentRecommendedForm, AppReviewForm
 from django.contrib.auth.models import User
 from time import *
@@ -242,3 +242,19 @@ def app_review(request):
     #nowtime = datetime.now().strftime('%H:%M')
     context = {'recommend': recommend, 'form': form}
     return render(request, 'bootrc/app_review.html', context)
+
+def category_select(request):
+    if request.method == 'POST':
+        selected = request.POST.getlist('selected')
+        for obj in selected:
+            PreferCate.objects.create(
+                user_num = request.user,
+                category = obj
+            )
+        return redirect('bootrc:index')
+    else:
+       category = Categories.objects.all().order_by('-name')
+       category_name = category.values_list('name', flat=True).distinct()
+       context = {'category_name': category_name}
+       return render(request, 'bootrc/category_select.html', context)
+
