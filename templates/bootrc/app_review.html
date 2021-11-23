@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h5 class="my-3 border-bottom pb-2">리뷰 추가</h5>
+    <form method="post" class="post-form my-3">
+        {% csrf_token %}
+        <!-- 오류표시 Start -->
+        {% if form.errors %}
+            <div class="alert alert-danger" role="alert">
+            {% for field in form %}
+                {% if field.errors %}
+                <strong>{{ field.label }}</strong>
+                {{ field.errors }}
+                {% endif %}
+            {% endfor %}
+            </div>
+        {% endif %}
+        <!-- 오류표시 End -->
+    <table class="table">
+        <thead>
+        <tr class="thead-dark">
+            <th>최근 추천 가게</th>
+            <th>최근 추천 메뉴</th>
+            <th>최근 추천 일자</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>{{ recommend.rest.rest_name }}</td>
+            <td>{{ recommend.menu_name.rest_menu }}</td>
+            <td>{{ recommend.created }}</td>
+
+        <div class="form-group">
+            <label for="comment">코멘트 남기기!</label>
+            <input type="textarea" class="form-control" name="comment" id="comment"
+                   value="{{ form.subject.value|default_if_none:'' }}">
+        </div>
+        <div class="form-group">
+            <label for="like_count">좋아요?</label>
+            <input type="number" class="form-control" name="like_count" id="like_count"
+                   value="{{ form.subject.value|default_if_none:'' }}">
+        </div>
+        <div class="form-group">
+            <label for="rest"></label>
+            <td><label><input type="hidden" name="rest" id="rest"
+                               value="{{ recommend.rest.rest_num }}"></label></td>
+        </div>
+        <div class="form-group">
+            <label for="menu_name"></label>
+            <td><label><input type="hidden" name="menu_name" id="menu_name"
+                              value="{{ recommend.menu_name.id }}"></label></td>
+        </div>
+        <button type="submit" class="btn btn-primary">저장하기</button>
+    </form>
+</div>
+{% endblock %}

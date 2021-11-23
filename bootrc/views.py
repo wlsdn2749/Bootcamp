@@ -1,9 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login # 로그인 및 회원가입 기능을 구현하기 위한 패키지
 from .crawling import Crawling
-from .models import Menu, Rest, RestMenu, Review, Prefer, Categories
-from .forms import MenuForm, RestForm, RestMenuForm, UserForm, PreferForm
 from django.contrib.auth.decorators import login_required
+from .models import Menu, Rest, RestMenu, Review, Prefer, Categories, recentRecommended, AppReview
+from .forms import MenuForm, RestForm, RestMenuForm, UserForm, PreferForm, recentRecommendedForm, AppReviewForm
 from django.contrib.auth.models import User
 from time import *
 from datetime import *
@@ -40,9 +40,18 @@ def recommendmenu(request):
     return render(request, 'bootrc/recommend_list.html', context)
 
 def recommendmenu2(request):
+    if request.method == 'POST':
+        form = recentRecommendedForm(request.POST)
+        if form.is_valid():
+            recommend = form.save(commit=False)
+            recommend.user = request.user
+            recommend.save()
+            return redirect('bootrc:index')
+    else:
+        form = recentRecommendedForm()
     menu = recom_menu()
     nowtime = datetime.now().strftime('%H:%M')
-    context = {'menu': menu, 'time': nowtime}
+    context = {'menu': menu, 'time': nowtime, 'form': form}
     return render(request, 'bootrc/recom_menu_test.html', context)
 
 
@@ -216,3 +225,20 @@ def restmenu_delete(request, restmenu_id):
 
 def admin_tools(request):
     return render(request, 'bootrc/admin.html')
+
+def app_review(request):
+    if request.method == 'POST':
+        form = AppReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.user = request.user
+            review.save()
+            return redirect('bootrc:index')
+    else:
+        form = AppReviewForm()
+    current_user = request.user
+    recommend = recentRecommended.objects.filter(user_id=current_user).order_by('-id').first()
+    #menu = recom_menu()
+    #nowtime = datetime.now().strftime('%H:%M')
+    context = {'recommend': recommend, 'form': form}
+    return render(request, 'bootrc/app_review.html', context)

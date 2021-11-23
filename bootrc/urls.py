@@ -28,6 +28,7 @@ urlpatterns = [
     path('menufavorite/', views.menu_favorite, name='menu_select'),
     path('tools',views.admin_tools,name='admin_tools'),
     path('recom_menu_test/', views.recommendmenu2, name='recommendmenu2'),
+    path('app_review/', views.app_review, name='app_review'),
 ]
 if settings.DEBUG:
         urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

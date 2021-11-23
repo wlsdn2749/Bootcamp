@@ -90,3 +90,22 @@ class Review(models.Model):
 class Categories(models.Model):
     name = models.CharField(max_length=300)
     rest = models.ForeignKey('Rest',on_delete=models.CASCADE, related_name='categories')
+
+class recentRecommended(models.Model):
+    rest = models.ForeignKey('Rest',on_delete=models.CASCADE, related_name='recent_recommended') # 최근 추천된 가게
+    user = models.ForeignKey(User, on_delete=models.CASCADE) # 유저
+    menu_name = models.ForeignKey('RestMenu', on_delete=models.CASCADE) # 최근 추천된 메뉴이름
+    comment = models.CharField(max_length=300, default='') # 리뷰 내용
+    like_count = models.PositiveIntegerField(default=0)  #리뷰의 좋아요 갯수
+    created = models.DateTimeField(auto_now_add=True)  # 추천 된 날짜가 언제인지
+
+    class Meta:
+        ordering = ['-id']
+
+class AppReview(models.Model):
+    rest = models.ForeignKey('Rest',on_delete=models.CASCADE, related_name='app_review') # 최근 추천된 가게
+    user = models.ForeignKey(User, on_delete=models.CASCADE) # 유저
+    menu_name = models.ForeignKey('RestMenu', on_delete=models.CASCADE) # 최근 추천된 메뉴이름
+    comment = models.CharField(max_length=300, default='') # 리뷰 내용
+    like_count = models.PositiveIntegerField(default=0)  #리뷰의 좋아요 갯수
+    created = models.DateTimeField(auto_now_add=True)  # 추천 된 날짜가 언제인지
