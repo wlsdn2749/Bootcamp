@@ -7,7 +7,7 @@
 -->
 <div class="container pt-5">
     {% if menu %}
-    <h3 class="pt-5 text-center">이 식당은 어떠세요?</h3>
+<!--    <h3 class="pt-5 text-center">이 식당은 어떠세요?</h3> -->
     <div style="width: 50%;margin-top: 50px;text-align: center;float: left">
         <img src ="/images/{{ menu.rest.image }}/">
     </div>
@@ -54,6 +54,7 @@
                     //infowindow.close();
                 });
             </script>
+    <div style="position: relative" >
     <div class="py-3 text-center alert alert-info" role="alert">
         <h4>추천 맛집 : <strong>{{ menu.rest.rest_name}}</strong></h4>
         <h4>별점 :<strong>{{ menu.rest.rest_star}}점</strong></h4>
@@ -63,6 +64,7 @@
         <h4>가게 번호 :<strong>{{ menu.rest.phone_number }}</strong></h4>
         {% endif %}
         <h4>주소 :<strong>{{ menu.rest.address }}</strong></h4>
+        <h4>리뷰 :<strong>{{ review.comment }}</strong></h4>
     </div>
     <form method="post" class="post-form my-3">
         {% csrf_token %}
@@ -88,8 +90,9 @@
                               value="{{ menu.id }}"></label></td>
         </div>
         <button type="submit" class="btn btn-primary" style="display: block;
-                    position: absolute; top:90%; left:50%" >저장하기</button>
+                    position: absolute; top:82%; left:46%" >확인</button>
     </form>
+    </div>
     {% else %}
     <h3 class="pt-5 text-center">메뉴가 없네요...</h3>
     {% endif %}

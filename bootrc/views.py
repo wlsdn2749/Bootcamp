@@ -50,8 +50,9 @@ def recommendmenu2(request):
     else:
         form = recentRecommendedForm()
     menu = recom_menu()
+    review = Review.objects.filter(restaurant_id=menu.rest_id).order_by('?').first()
     nowtime = datetime.now().strftime('%H:%M')
-    context = {'menu': menu, 'time': nowtime, 'form': form}
+    context = {'menu': menu, 'time': nowtime, 'form': form, 'review': review}
     return render(request, 'bootrc/recom_menu_test.html', context)
 
 
