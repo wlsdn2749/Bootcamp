@@ -19,7 +19,7 @@
         <!-- 로그인 정보 출력 -->
         {% if request.user.is_authenticated %}
         <a href="/logout" class="menu navbar-nav nav-link">로그아웃</a>
-        <strong> 현재 로그인 : {{user.username}} 님 </strong>
+        <div class="top_login_info"> {{user.username}} 님 환영합니다! </div>
         {% else %}
         <a href="/login" class="menu navbar-nav nav-link">로그인</a>
         <a href="/signup" class="menu navbar-nav navbar-link">회원가입</a>
