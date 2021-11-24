@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!--
+<div style="position: fixed;z-index: -1"><img src ="/images/{{ menu.rest.back_image }}/"></div>
+-->
+<div class="container pt-5">
+    {% if menu %}
+<!--    <h3 class="pt-5 text-center">이 식당은 어떠세요?</h3> -->
+    <div style="width: 50%;margin-top: 50px;text-align: center;float: left">
+        <img src ="/images/{{ menu.rest.image }}/">
+    </div>
+    <div id="map" style="width:50%;width:500px;height:400px;float: right"></div><div style="clear: both"></div>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=e484d23c5256509bb404015ea2639044"></script>
+            </script>
+            <script>
+                var container = document.getElementById('map');
+                var options = {
+                    center: new kakao.maps.LatLng( {{menu.rest.rest_location_lat}}, {{menu.rest.rest_location_lon}}),
+                level: 3
+                };
+                var map = new kakao.maps.Map(container, options);
+
+                var markerPosition  = new kakao.maps.LatLng( {{menu.rest.rest_location_lat}}, {{menu.rest.rest_location_lon}});
+
+                // 마커를 생성합니다
+                var marker = new kakao.maps.Marker({
+                    position: markerPosition
+                });
+
+                // 마커가 지도 위에 표시되도록 설정합니다
+                marker.setMap(map);
+
+                var iwContent = '<a href="https://www.yogiyo.co.kr/mobile/#/{{restmenu.rest.yogiyo_id}}"><div style="padding:1px; width=1px; height=1x">{{restmenu.rest.rest_name}}<br>요기요 에서 확인하기</br></div></a>';
+                    // 링크는 잘 작동하는데 문제는 div가 작동을 안함 해결해줘요!
+                    //'<div style="background-color: gold; padding:10px; width: 300px; height: auto; cursor: pointer;" onClick="location.href="https://www.yogiyo.co.kr/mobile/#/{{restmenu.rest.yogiyo_id}}";">요기요 링크!</div>'
+                    // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
+
+                    // 인포윈도우를 생성합니다
+                    var infowindow = new kakao.maps.InfoWindow({
+                        content : iwContent
+                    });
+
+                // 마커에 마우스오버 이벤트를 등록합니다
+                kakao.maps.event.addListener(marker, 'mouseover', function() {
+                    // 마커에 마우스오버 이벤트가 발생하면 인포윈도우를 마커위에 표시합니다
+                    infowindow.open(map, marker);
+                });
+
+                // 마커에 마우스아웃 이벤트를 등록합니다
+                kakao.maps.event.addListener(marker, 'mouseout', function() {
+                    // 마커에 마우스아웃 이벤트가 발생하면 인포윈도우를 제거합니다
+                    //infowindow.close();
+                });
+            </script>
+    <div style="position: relative" >
+    <div class="py-3 text-center alert alert-info" role="alert">
+        <h4>추천 맛집 : <strong>{{ menu.rest.rest_name}}</strong></h4>
+        <h4>별점 :<strong>{{ menu.rest.rest_star}}점</strong></h4>
+        <h4>운영 시간 :<strong>{{ menu.rest.opening_time }} ~ {{ menu.rest.closing_time }}</strong></h4>
+        <h4>거리 :<strong>{{menu.rest.rest_distance_fromBD }}</strong></h4>
+        {% if menu.rest.phone_number %}
+        <h4>가게 번호 :<strong>{{ menu.rest.phone_number }}</strong></h4>
+        {% endif %}
+        <h4>주소 :<strong>{{ menu.rest.address }}</strong></h4>
+        {% if review.comment %}
+        <h4>리뷰 :<strong>{{ review.comment }}</strong></h4>
+        {% endif %}
+        {% if app.comment %}
+        <h4>앱 리뷰 :<strong>{{ app.comment }}</strong></h4>
+        {% endif %}
+    </div>
+    <form method="post" class="post-form my-3">
+        {% csrf_token %}
+        <!-- 오류표시 Start -->
+        {% if form.errors %}
+            <div class="alert alert-danger" role="alert">
+            {% for field in form %}
+                {% if field.errors %}
+                <strong>{{ field.label }}</strong>
+                {{ field.errors }}
+                {% endif %}
+            {% endfor %}
+            </div>
+        {% endif %}
+        <div class="form-group">
+            <label for="rest"></label>
+            <td><label><input type="hidden" name="rest" id="rest"
+                               value="{{ menu.rest.rest_num }}"></label></td>
+        </div>
+        <div class="form-group">
+            <label for="menu_name"></label>
+            <td><label><input type="hidden" name="menu_name" id="menu_name"
+                              value="{{ menu.id }}"></label></td>
+        </div>
+        <button type="submit" class="btn btn-primary" style="display: block;
+                    position: absolute; top:82%; left:46%" >확인</button>
+    </form>
+    </div>
+    {% else %}
+    <h3 class="pt-5 text-center">메뉴가 없네요...</h3>
+    {% endif %}
+</div>
+
+{% endblock %}

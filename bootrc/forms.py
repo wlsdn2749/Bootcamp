@@ -1,5 +1,5 @@
 from django import forms
-from .models import Menu, Rest, RestMenu, Prefer
+from .models import Menu, Rest, RestMenu, Prefer, recentRecommended, AppReview
 # 회원가입에서 사용함.
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
@@ -34,5 +34,21 @@ class UserForm(UserCreationForm):
 class PreferForm(forms.ModelForm):  # 유저 메뉴 선호도 조사
     class Meta:
         model = Prefer
-        fields = ['pref_menu', 'pref_like']
+        fields = ['pref_like', 'pref_menu']
+        widget = {'pref_menu': forms.HiddenInput()}
 
+class recentRecommendedForm(forms.ModelForm):  # 유저 메뉴 선호도 조사
+    class Meta:
+        model = recentRecommended
+        fields = ['rest', 'menu_name']
+        widget = {'rest': forms.HiddenInput(),
+                  'menu_name':forms.HiddenInput()
+        }
+
+class AppReviewForm(forms.ModelForm):
+    class Meta:
+        model = AppReview
+        fields = ['comment', 'like_count', 'rest', 'menu_name']
+        widget = {'rest': forms.HiddenInput(),
+                  'menu_name': forms.HiddenInput()
+        }

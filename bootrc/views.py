@@ -1,8 +1,12 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login # 로그인 및 회원가입 기능을 구현하기 위한 패키지
 from .crawling import Crawling
-from .models import Menu, Rest, RestMenu, Review
-from .forms import MenuForm, RestForm, RestMenuForm, UserForm, PreferForm
+from django.contrib.auth.decorators import login_required
+from .models import Menu, Rest, RestMenu, Review, Prefer, Categories, recentRecommended, AppReview, PreferCate
+from .forms import MenuForm, RestForm, RestMenuForm, UserForm, PreferForm, recentRecommendedForm, AppReviewForm
+from django.contrib.auth.models import User
+from time import *
+from datetime import *
 import random
 import math
 from haversine import haversine  # haversine 은 위도 경도로 거리 계산 함수
@@ -24,13 +28,75 @@ def menu_list(request):
 
 def rest_list(request):
     rest_list = Rest.objects.order_by('rest_num')
-    context = {'rest_list': rest_list}
+    categories = Categories.objects.all()
+    context = {'rest_list': rest_list, 'categories':categories}
     return render(request, 'bootrc/rest_list.html', context)
 
 def recommendmenu(request):
-    restmenu_list = RestMenu.objects.order_by('-recommendmenu')
-    context = {'restmenu_list': restmenu_list}
+    #restmenu = RestMenu.objects.order_by('-recommendmenu').first() #점수가 높은순 1개만 확인
+    restmenu = RestMenu.objects.order_by('?').first() # 랜덤정렬 첫번째
+    review = Review.objects.filter(restaurant_id=restmenu.rest_id).order_by('?').first()
+    context = {'restmenu': restmenu, 'review': review}
     return render(request, 'bootrc/recommend_list.html', context)
+
+def recommendmenu2(request):
+    if request.method == 'POST':
+        form = recentRecommendedForm(request.POST)
+        if form.is_valid():
+            recommend = form.save(commit=False)
+            recommend.user = request.user
+            recommend.save()
+            return redirect('bootrc:index')
+    else:
+        form = recentRecommendedForm()
+
+    current_user = request.user
+    cate_list = PreferCate.objects.filter(user_num=current_user).order_by('-id')
+    menu = recom_menu(cate_list, current_user)
+    review = Review.objects.filter(restaurant_id=menu.rest_id).order_by('?').first()
+    app = AppReview.objects.filter(rest_id = menu.rest_id).order_by('?').first()
+    context = {'menu': menu, 'app': app, 'form': form, 'review': review}
+    return render(request, 'bootrc/recom_menu_test.html', context)
+
+
+# 도보 분당 63m
+def recom_menu(cate_list, user):
+    i = 0
+    probaility = 0.0
+    # now = strftime("%H:%M", gmtime())
+    menu_list = RestMenu.objects.order_by('?')
+    while True:
+        probability = 0.0  # 최종 메뉴 선별 확률( 마지막에 종합된 숫자로 확률 돌림 )
+        rest_star = menu_list[i].rest.rest_star
+        rest_cate = Categories.objects.filter(rest_id=menu_list[i].rest.rest_num)
+        """
+        # 가게 운영시간 기준에 맞지 않으면 다시 불러오기
+        if time + datetime.timedelta(minutes=(menu_list[i].rest.rest_distance_fromBD/63)+60)
+        < menu_list[i].closing_time or 
+        time + datetime.timedelta(minutes=(menu_list[i].rest.rest_distance_fromBD/63))
+        < menu_list[i].opening_time:
+            i += 1
+            continue
+        """
+        # 도보(기본값)일 경우 가게와 떨어진 거리가 300이하인 경우 확률에 +5%
+        if set(cate_list) != set(rest_cate):
+            i += 1
+            continue
+        elif menu_list[i].rest.rest_distance_fromBD > 1000:
+            i += 1
+            continue
+        elif menu_list[i].rest.rest_distance_fromBD < 300:
+            probaility += 5
+        # 별점 기준 확률 조정( 낮을 수록 적은 확률 )
+        probability += (rest_star ** 2) * 2
+        result = random.randrange(0, 100)
+
+        if result <= probability:
+            return menu_list[i]
+        else:
+            i += 1
+        if i == len(menu_list):
+            i = 0
 
 
 def crawling(request):
@@ -113,19 +179,20 @@ def signup(request):
         form = UserForm()
     return render(request, 'bootrc/signup.html', {'form': form})
 
-
+@login_required(login_url='bootrc:login')
 def menu_favorite(request):  # 음식 선호도 조사
-    list2 = Menu.objects.order_by('?')
+    random_menu = RestMenu.objects.order_by('?').first() # 랜덤 메뉴 하나
     current_user = request.user
-    context = {'list2': list2[0:5], 'current_user': current_user}
     if request.method == "POST":
         form = PreferForm(request.POST)
         if form.is_valid():
-            pref = form.save()
-            pref.save()
+            prefer = form.save(commit=False)
+            prefer.user_num = current_user
+            prefer.save()
             return redirect('bootrc:index')
     else:
         form = PreferForm()
+    context = {'random_menu': random_menu, 'current_user': current_user, 'form': form}
     return render(request, 'bootrc/menu_list_favorite_select.html', context)
 
 
@@ -137,12 +204,14 @@ def menu_delete(request, menu_menu_num):
     menu.delete()
     return redirect('bootrc:menu_list')
 
-def crawling_review_delete(request):
+def crawling_delete(request):
     '''
-    리뷰 삭제
+    크롤링 데이터 (가게, 메뉴, 리뷰) 삭제
     '''
-    review = Review.objects.all()
-    review.delete()
+    Review.objects.all().delete()
+    RestMenu.objects.all().delete()
+    Rest.objects.all().delete()
+
     return redirect('bootrc:index')
 
 def rest_delete(request, rest_rest_num):
@@ -164,3 +233,38 @@ def restmenu_delete(request, restmenu_id):
 
 def admin_tools(request):
     return render(request, 'bootrc/admin.html')
+
+def app_review(request):
+    if request.method == 'POST':
+        form = AppReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.user = request.user
+            review.save()
+            return redirect('bootrc:index')
+    else:
+        form = AppReviewForm()
+    current_user = request.user
+    recommend = recentRecommended.objects.filter(user_id=current_user).order_by('-id').first()
+    #menu = recom_menu()
+    #nowtime = datetime.now().strftime('%H:%M')
+    context = {'recommend': recommend, 'form': form}
+    return render(request, 'bootrc/app_review.html', context)
+
+def category_select(request):
+    if request.method == 'POST':
+        selected = request.POST.getlist('selected')
+        for obj in selected:
+            PreferCate.objects.create(
+                user_num=request.user,
+                category=obj
+            )
+        return redirect('bootrc:index')
+    else:
+       category = Categories.objects.all().order_by('-name')
+       category_name = category.values_list('name', flat=True).distinct()
+       current_user = request.user
+       cate_list = PreferCate.objects.filter(user_num=current_user).order_by('-id')
+       context = {'category_name': category_name, 'cate_list': cate_list}
+       return render(request, 'bootrc/category_select.html', context)
+

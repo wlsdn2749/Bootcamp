@@ -2,7 +2,8 @@ from django.urls import path
 from . import views
 from django.contrib.auth import views as auth_views #django의 자체 로그인 기능 사용
 from . import models
-from django.conf.urls.static import static #이미지 로드에 사용
+from django.conf import settings
+from django.conf.urls.static import static
 
 app_name = 'bootrc'
 
@@ -21,9 +22,14 @@ urlpatterns = [
     path('menu/delete/<int:menu_menu_num>', views.menu_delete, name='menu_delete'),
     path('rest/delete/<int:rest_rest_num>', views.rest_delete, name='rest_delete'),
     path('crawling', views.crawling, name='crawling'),
-    path('crawling_review_delete', views.crawling_review_delete, name='crawling_review_delete'),
+    path('crawling_delete', views.crawling_delete, name='crawling_delete'),
     path('recommendmenu', views.recommendmenu, name='recommendmenu'),
     path('restmenu/delete/<int:restmenu_id>', views.restmenu_delete, name='restmenu_delete'),
     path('menufavorite/', views.menu_favorite, name='menu_select'),
-    path('tools',views.admin_tools,name='admin_tools')
+    path('tools',views.admin_tools,name='admin_tools'),
+    path('recom_menu_test/', views.recommendmenu2, name='recommendmenu2'),
+    path('app_review/', views.app_review, name='app_review'),
+    path('category_select/', views.category_select, name='category_select'),
 ]
+if settings.DEBUG:
+        urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
