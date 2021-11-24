@@ -189,7 +189,10 @@ def menu_favorite(request):  # 음식 선호도 조사
             prefer = form.save(commit=False)
             prefer.user_num = current_user
             prefer.save()
-            return redirect('bootrc:index')
+
+            form = PreferForm()
+            context = {'random_menu': random_menu, 'current_user': current_user, 'form': form}
+            return render(request, 'bootrc/menu_list_favorite_select.html', context)
     else:
         form = PreferForm()
     context = {'random_menu': random_menu, 'current_user': current_user, 'form': form}
