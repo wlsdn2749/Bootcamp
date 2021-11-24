@@ -97,8 +97,8 @@ def recom_menu(current_user):
                 if user.category == rest.name:
                     probability += 5
                     check = 1
-                if "편의점" in rest.name:
-                    check = 0
+    #            if "편의점" in rest.name:
+    #                check = 0
     #        if user.category in rest_cate:
     #            probability += 10
     #            check += 1
