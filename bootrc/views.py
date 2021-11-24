@@ -49,22 +49,26 @@ def recommendmenu2(request):
             return redirect('bootrc:index')
     else:
         form = recentRecommendedForm()
-    menu = recom_menu()
+
+    current_user = request.user
+    cate_list = PreferCate.objects.filter(user_num=current_user).order_by('-id')
+    menu = recom_menu(cate_list, current_user)
     review = Review.objects.filter(restaurant_id=menu.rest_id).order_by('?').first()
-    nowtime = datetime.now().strftime('%H:%M')
-    context = {'menu': menu, 'time': nowtime, 'form': form, 'review': review}
+    app = AppReview.objects.filter(rest_id = menu.rest_id).order_by('?').first()
+    context = {'menu': menu, 'app': app, 'form': form, 'review': review}
     return render(request, 'bootrc/recom_menu_test.html', context)
 
 
 # 도보 분당 63m
-def recom_menu():
+def recom_menu(cate_list, user):
     i = 0
     probaility = 0.0
-    now = strftime("%H:%M", gmtime())
+    # now = strftime("%H:%M", gmtime())
     menu_list = RestMenu.objects.order_by('?')
     while True:
         probability = 0.0  # 최종 메뉴 선별 확률( 마지막에 종합된 숫자로 확률 돌림 )
         rest_star = menu_list[i].rest.rest_star
+        rest_cate = Categories.objects.filter(rest_id=menu_list[i].rest.rest_num)
         """
         # 가게 운영시간 기준에 맞지 않으면 다시 불러오기
         if time + datetime.timedelta(minutes=(menu_list[i].rest.rest_distance_fromBD/63)+60)
@@ -75,11 +79,14 @@ def recom_menu():
             continue
         """
         # 도보(기본값)일 경우 가게와 떨어진 거리가 300이하인 경우 확률에 +5%
-        if menu_list[i].rest.rest_distance_fromBD < 300:
-            probaility += 5
+        if set(cate_list) != set(rest_cate):
+            i += 1
+            continue
         elif menu_list[i].rest.rest_distance_fromBD > 1000:
             i += 1
             continue
+        elif menu_list[i].rest.rest_distance_fromBD < 300:
+            probaility += 5
         # 별점 기준 확률 조정( 낮을 수록 적은 확률 )
         probability += (rest_star ** 2) * 2
         result = random.randrange(0, 100)
@@ -249,13 +256,15 @@ def category_select(request):
         selected = request.POST.getlist('selected')
         for obj in selected:
             PreferCate.objects.create(
-                user_num = request.user,
-                category = obj
+                user_num=request.user,
+                category=obj
             )
         return redirect('bootrc:index')
     else:
        category = Categories.objects.all().order_by('-name')
        category_name = category.values_list('name', flat=True).distinct()
-       context = {'category_name': category_name}
+       current_user = request.user
+       cate_list = PreferCate.objects.filter(user_num=current_user).order_by('-id')
+       context = {'category_name': category_name, 'cate_list': cate_list}
        return render(request, 'bootrc/category_select.html', context)
 

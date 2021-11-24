@@ -2,6 +2,7 @@
 {% load static %}
 1<link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
 {% block content %}
+<div style="border: 2px solid #5555fa; padding: 3px; width: 120px; float: left">
 <form action="" method="post">
         {% csrf_token %}
         <!-- 오류표시 Start -->
@@ -16,10 +17,19 @@
             </div>
         {% endif %}
   {% for obj in category_name %}
-  	<pre><input id="selected" type="checkbox" name="selected" value="{{ obj }}">{{obj}}</pre>
+    <pre><input id="selected" type="checkbox" name="selected" value="{{ obj }}">{{obj}}</pre>
   {% endfor %}
   <button type="submit">저장</button>
 </form>
+</div>
+<div style="float: left; border: 2px solid #5555fa; padding: 3px; width: 190px; margin-left: 4px">
+    {% if cate_list %}
+    <b><p>이전에 선택된 카테고리</p></b>
+    {% for count in cate_list %}
+    <pre>{{ count.category }}</pre>
+    {% endfor %}
+    {% endif %}
+</div>
 {% endblock %}
 <!--JS-->
 {% block script %}

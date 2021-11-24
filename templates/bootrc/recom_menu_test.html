@@ -64,7 +64,12 @@
         <h4>가게 번호 :<strong>{{ menu.rest.phone_number }}</strong></h4>
         {% endif %}
         <h4>주소 :<strong>{{ menu.rest.address }}</strong></h4>
+        {% if review.comment %}
         <h4>리뷰 :<strong>{{ review.comment }}</strong></h4>
+        {% endif %}
+        {% if app.comment %}
+        <h4>앱 리뷰 :<strong>{{ app.comment }}</strong></h4>
+        {% endif %}
     </div>
     <form method="post" class="post-form my-3">
         {% csrf_token %}
