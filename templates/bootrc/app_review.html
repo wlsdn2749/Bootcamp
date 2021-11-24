@@ -3,7 +3,6 @@
 {% block content %}
 <div class="container">
     <h5 class="my-3 border-bottom pb-2">리뷰 추가</h5>
-    <form method="post" class="post-form my-3">
         {% csrf_token %}
         <!-- 오류표시 Start -->
         {% if form.errors %}
@@ -30,7 +29,10 @@
             <td>{{ recommend.rest.rest_name }}</td>
             <td>{{ recommend.menu_name.rest_menu }}</td>
             <td>{{ recommend.created }}</td>
-
+        </tr>
+        </tbody>
+    </table>
+    <form method="post" class="post-form my-3">
         <div class="form-group">
             <label for="comment">코멘트 남기기!</label>
             <textarea class="form-control" name="comment" id="comment" value="{{ form.subject.value|default_if_none:'' }}"></textarea>
