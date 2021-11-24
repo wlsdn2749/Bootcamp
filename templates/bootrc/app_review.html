@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
 <div class="container">
     <h5 class="my-3 border-bottom pb-2">리뷰 추가</h5>
@@ -33,25 +33,30 @@
 
         <div class="form-group">
             <label for="comment">코멘트 남기기!</label>
-            <input type="textarea" class="form-control" name="comment" id="comment"
-                   value="{{ form.subject.value|default_if_none:'' }}">
+            <textarea class="form-control" name="comment" id="comment" value="{{ form.subject.value|default_if_none:'' }}"></textarea>
         </div>
         <div class="form-group">
-            <label for="like_count">좋아요?</label>
-            <input type="number" class="form-control" name="like_count" id="like_count"
-                   value="{{ form.subject.value|default_if_none:'' }}">
+            얼마나 만족하셨나요?<br>
+            <label class="radio_review" for="like_count0"><input type="radio" name="like_count" id="like_count0" value="0">
+            매우 불만족...</label>
+            <label class="radio_review" for="like_count1"><input type="radio" name="like_count" id="like_count1" value="1">
+            불만족...</label>
+            <label class="radio_review" for="like_count2"><input type="radio" name="like_count" id="like_count2" value="2">
+            그저 그랬어요.</label>
+            <label class="radio_review" for="like_count3"><input type="radio" name="like_count" id="like_count3" value="3">
+            만족했어요!</label>
+            <label class="radio_review" for="like_count4"><input type="radio" name="like_count" id="like_count4" value="4">
+            매우 만족했어요!</label>
         </div>
+        <button type="submit" class="btn btn-primary">저장하기</button>
         <div class="form-group">
             <label for="rest"></label>
-            <td><label><input type="hidden" name="rest" id="rest"
-                               value="{{ recommend.rest.rest_num }}"></label></td>
+            <td><label><input type="hidden" name="rest" id="rest" value="{{ recommend.rest.rest_num }}"></label></td>
         </div>
         <div class="form-group">
             <label for="menu_name"></label>
-            <td><label><input type="hidden" name="menu_name" id="menu_name"
-                              value="{{ recommend.menu_name.id }}"></label></td>
+            <td><label><input type="hidden" name="menu_name" id="menu_name" value="{{ recommend.menu_name.id }}"></label></td>
         </div>
-        <button type="submit" class="btn btn-primary">저장하기</button>
     </form>
 </div>
 {% endblock %}
