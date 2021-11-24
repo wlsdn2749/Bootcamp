@@ -13,6 +13,7 @@
     <a href="{% url 'bootrc:recommendmenu' %}" class="btn btn-primary">메뉴 추천</a>
     <a href="{% url 'bootrc:recommendmenu2' %}" class="btn btn-primary">추천 받기 테스트</a>
     <a href="{% url 'bootrc:app_review' %}" class="btn btn-primary">리뷰 작성하기</a>
+    <a href="{% url 'bootrc:rest_ranking' %}" class="btn btn-primary">맛집 랭크</a>
     <span><strong> 현재 로그인 : {{user.username}} 님 </strong></span>
 {% else %}
     <div class="notice">이 페이지에 접근할 권한이 없습니다.<br/>로그인 후 이용하여 주십시오.<br/></div>

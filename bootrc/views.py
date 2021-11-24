@@ -301,20 +301,14 @@ def category_select(request):
        context = {'category_name': category_name, 'cate_list': cate_list}
        return render(request, 'bootrc/category_select.html', context)
 
+
 def rest_ranking(request):
     rest_list = Rest.objects.order_by('rest_num')
-    review_ratings = Review.objects.filter(restaurant_id=rest_list)
-    app_ratings = AppReview.objects.filter(rest_id=rest_list)
-    count = 0
-    rest_rank = []
-    for i in review_ratings:
-        count += review_ratings[i].rating
-    review_rating_avg = count/len(review_ratings)
-    count = 0
-    for i in app_ratings:
-        count += app_ratings[i].like_count
-    app_review_rating_avg = count/len(app_ratings)
-#    for i in rest_list:
-#        rest_rank[i] = review_rating_avg[i]+
+    for rest in rest_list:
+        rest.ranking_calc()
+    context = {'rest_list': rest_list}
+    return render(request, 'bootrc/restRanking.html', context)
+
+
 # 별점 + ( 요기요 리뷰 점수 총합 / 리뷰 전체 개수 + 앱 리뷰 점수 총합 / 앱 리뷰 전체 )/2
-# 예상 0 ~ 5.124 랭크 실시간 나오게
+# 예상 0 ~ 5 랭크 실시간 나오게

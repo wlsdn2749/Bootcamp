@@ -41,6 +41,7 @@ class Rest(models.Model):
     phone_number = models.CharField(max_length=20, default='')
     address = models.CharField(max_length=255, default='')
     yogiyo_id = models.IntegerField(default=0)
+    rank_data = models.FloatField(default=0.0)
 
     image = models.ImageField(upload_to='restaurant_image', null=True, blank=True)
     back_image = models.ImageField(upload_to='restaurant_back_image', null=True, blank=True)
@@ -55,6 +56,26 @@ class Rest(models.Model):
         self.rest_distance_fromBD = result
         self.save()
         return result
+
+    def ranking_calc(self):
+        review_ratings = Review.objects.filter(restaurant_id=self.rest_num).order_by('-id')
+        app_ratings = AppReview.objects.filter(rest_id=self.rest_num)
+        count = 0
+        review_rating_avg = 0
+        app_review_rating_avg = 0
+        for j in review_ratings:
+            count += j.rating
+        if review_ratings:
+            review_rating_avg = count / len(review_ratings)
+        count = 0
+        for j in app_ratings:
+            count += j.like_count
+        if app_ratings:
+            app_review_rating_avg = count / len(app_ratings)
+        total = (review_rating_avg + app_review_rating_avg + self.rest_star) / 3
+        self.rank_data = total
+        self.save()
+        return (review_rating_avg + app_review_rating_avg + self.rest_star) / 3
 
 
 def menu_img_path(instance, filename):
@@ -86,6 +107,7 @@ class Review(models.Model):
     menu_name = models.CharField(max_length=100) # 리뷰한 메뉴이름
     created = models.DateTimeField(auto_now_add=True) # 작성일이 언제인지
     like_count = models.PositiveIntegerField(default=0) #리뷰의 좋아요 갯수
+
 
     class Meta:
         ordering = ['-id']
