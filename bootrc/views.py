@@ -87,7 +87,7 @@ def recom_menu(current_user):
         '''
         # datetime.time 형식
         # 가게 운영시간 기준에 맞지 않으면 다시 불러오기
-        if time < menu_list[i].rest.closing_time or time < menu_list[i].rest.opening_time:
+        if time < menu_list[i].rest.closing_time and time < menu_list[i].rest.opening_time:
             i += 1
             continue
 
