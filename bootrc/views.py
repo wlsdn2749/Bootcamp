@@ -6,7 +6,7 @@ from .models import Menu, Rest, RestMenu, Review, Prefer, Categories, recentReco
 from .forms import MenuForm, RestForm, RestMenuForm, UserForm, PreferForm, recentRecommendedForm, AppReviewForm
 from django.contrib.auth.models import User
 from time import *
-from datetime import *
+import datetime
 import random
 import math
 from haversine import haversine  # haversine 은 위도 경도로 거리 계산 함수
@@ -51,8 +51,7 @@ def recommendmenu2(request):
         form = recentRecommendedForm()
 
     current_user = request.user
-    cate_list = PreferCate.objects.filter(user_num=current_user).order_by('-id')
-    menu = recom_menu(cate_list, current_user)
+    menu = recom_menu(current_user)
     review = Review.objects.filter(restaurant_id=menu.rest_id).order_by('?').first()
     app = AppReview.objects.filter(rest_id = menu.rest_id).order_by('?').first()
     context = {'menu': menu, 'app': app, 'form': form, 'review': review}
@@ -60,26 +59,40 @@ def recommendmenu2(request):
 
 
 # 도보 분당 63m
-def recom_menu(cate_list, user):
+def recom_menu(current_user):
     i = 0
     probaility = 0.0
-    # now = strftime("%H:%M", gmtime())
+    time = datetime.datetime.now().time()
+    time_for_recent_calc = datetime.datetime.now()
     menu_list = RestMenu.objects.order_by('?')
+    cate_list = PreferCate.objects.filter(user_num=current_user).order_by('-id')
+    recent = recentRecommended.objects.filter(user=current_user).order_by('-id')
+    user_prefer = Prefer.objects.filter(user_num=current_user).order_by('-id')
     while True:
+        check = 0  # 유저 카테고리와 가게 카테고리가 일이하는지 확인하는 변수 1 = 일치함 존재
         probability = 0.0  # 최종 메뉴 선별 확률( 마지막에 종합된 숫자로 확률 돌림 )
         rest_star = menu_list[i].rest.rest_star
         rest_cate = Categories.objects.filter(rest_id=menu_list[i].rest.rest_num)
-        """
+        '''  # datetime.time에 시간 추가 못함 -> 현재시간과 가게 운영시간 차이로 분류
+        minute = datetime.time(0, 0, 0)
+        minute60 = datetime.time(0, 1, 0)
+        walk = datetime.time(0, int(menu_list[i].rest.rest_distance_fromBD/63), 0)
+        if menu_list[i].rest.rest_distance_fromBD/3780 > 1:
+            minute += datetime.timedelta(hours=menu_list[i].rest.rest_distance_fromBD/3780)
+            minute += datetime.timedelta(minutes=(menu_list[i].rest.rest_distance_fromBD % 3780)/63)
+        else:
+            minute += datetime.timedelta(minutes=int(menu_list[i].rest.rest_distance_fromBD/63))
+    #    closing_time = datetime.strptime(menu_list[i].rest.closing_time, "%H:%M")
+    #    opening_time = datetime.strptime(menu_list[i].rest.opening_time, "%H:%M")
+        '''
+        # datetime.time 형식
         # 가게 운영시간 기준에 맞지 않으면 다시 불러오기
-        if time + datetime.timedelta(minutes=(menu_list[i].rest.rest_distance_fromBD/63)+60)
-        < menu_list[i].closing_time or 
-        time + datetime.timedelta(minutes=(menu_list[i].rest.rest_distance_fromBD/63))
-        < menu_list[i].opening_time:
+        if time < menu_list[i].rest.closing_time or time < menu_list[i].rest.opening_time:
             i += 1
             continue
-        """
+
         # 도보(기본값)일 경우 가게와 떨어진 거리가 300이하인 경우 확률에 +5%
-        if set(cate_list) != set(rest_cate):
+        if any(format in rest_cate for format in cate_list):
             i += 1
             continue
         elif menu_list[i].rest.rest_distance_fromBD > 1000:
@@ -87,6 +100,18 @@ def recom_menu(cate_list, user):
             continue
         elif menu_list[i].rest.rest_distance_fromBD < 300:
             probaility += 5
+
+        for count in user_prefer:
+            if menu_list[i].rest_menu == count.pref_menu.rest_menu:
+                probability += count.pref_like
+                # 유저가 해당 메뉴를 좋아하는 만큼 확률에 추가
+                # ex) 4 만큼 좋아할 경우 (확률) + 4%
+    #    for count in recent:
+    #        diff_time = count.created
+    #        day_diff = time_for_recent_calc - diff_time
+    #        if day_diff.days < 3:
+    #            if count.menu_name == menu_list[i].rest_menu:
+    #                probability -= 10
         # 별점 기준 확률 조정( 낮을 수록 적은 확률 )
         probability += (rest_star ** 2) * 2
         result = random.randrange(0, 100)
@@ -268,3 +293,20 @@ def category_select(request):
        context = {'category_name': category_name, 'cate_list': cate_list}
        return render(request, 'bootrc/category_select.html', context)
 
+def rest_ranking(request):
+    rest_list = Rest.objects.order_by('rest_num')
+    review_ratings = Review.objects.filter(restaurant_id=rest_list)
+    app_ratings = AppReview.objects.filter(rest_id=rest_list)
+    count = 0
+    rest_rank = []
+    for i in review_ratings:
+        count += review_ratings[i].rating
+    review_rating_avg = count/len(review_ratings)
+    count = 0
+    for i in app_ratings:
+        count += app_ratings[i].like_count
+    app_review_rating_avg = count/len(app_ratings)
+#    for i in rest_list:
+#        rest_rank[i] = review_rating_avg[i]+
+# 별점 + ( 요기요 리뷰 점수 총합 / 리뷰 전체 개수 + 앱 리뷰 점수 총합 / 앱 리뷰 전체 )/2
+# 예상 0 ~ 5.124 랭크 실시간 나오게
