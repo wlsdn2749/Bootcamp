@@ -31,3 +31,9 @@ body{
     width:200px;
     height:200px;
 }
+.top_login_info{
+    padding:3px 5px;
+    background:gold;
+    font-weight:bold;
+    border-radius:5px;
+}

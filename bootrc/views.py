@@ -214,7 +214,10 @@ def menu_favorite(request):  # 음식 선호도 조사
             prefer = form.save(commit=False)
             prefer.user_num = current_user
             prefer.save()
-            return redirect('bootrc:index')
+
+            form = PreferForm()
+            context = {'random_menu': random_menu, 'current_user': current_user, 'form': form}
+            return render(request, 'bootrc/menu_list_favorite_select.html', context)
     else:
         form = PreferForm()
     context = {'random_menu': random_menu, 'current_user': current_user, 'form': form}
@@ -278,6 +281,8 @@ def app_review(request):
 
 def category_select(request):
     if request.method == 'POST':
+        prefer = PreferCate.objects.filter(user_num=request.user)
+        prefer.delete()
         selected = request.POST.getlist('selected')
         for obj in selected:
             PreferCate.objects.create(
@@ -290,6 +295,9 @@ def category_select(request):
        category_name = category.values_list('name', flat=True).distinct()
        current_user = request.user
        cate_list = PreferCate.objects.filter(user_num=current_user).order_by('-id')
+       remove_set = ["편의점", "1인분주문", "테이크아웃", "프렌차이즈"]
+       category_name = list(category_name)
+       category_name = [x for x in category_name if x not in remove_set]
        context = {'category_name': category_name, 'cate_list': cate_list}
        return render(request, 'bootrc/category_select.html', context)
 
