@@ -63,7 +63,7 @@ class Rest(models.Model):
         count = 0
         review_rating_avg = 0
         app_review_rating_avg = 0
-        for j in review_ratigs:
+        for j in review_ratings:
             count += j.rating
         if review_ratings:
             review_rating_avg = count / len(review_ratings)
