@@ -75,10 +75,18 @@ class Rest(models.Model):
                 count += j.like_count
             total_count += 1
             app_review_rating_avg = count / len(app_ratings)
+
+        if self.rest_number_reviews > 2000 :
+            number_review = 3
+        elif self.rest_number_reviews > 1000:
+            number_review = 2
+        else :
+            number_review = 1
+
         if app_ratings.exists():
-            total = (review_rating_avg + app_review_rating_avg + self.rest_star) / 3
+            total = (review_rating_avg + 2*app_review_rating_avg + self.rest_star + number_review ) / 4
         else:
-            total = (review_rating_avg + self.rest_star) / 2
+            total = (review_rating_avg + self.rest_star + number_review) / 3
         self.rank_data = total
         self.save()
         return total

@@ -242,7 +242,14 @@ def signup(request):
 
 @login_required(login_url='bootrc:login')
 def menu_favorite(request):  # 음식 선호도 조사
-    random_menu = RestMenu.objects.order_by('?').first() # 랜덤 메뉴 하나
+    random_menu = RestMenu.objects.order_by('?')
+    category = Categories.objects.order_by('?')
+    user_prefercate = PreferCate.objects.filter(user_num=request.user)
+    for cate in category:
+        for user in user_prefercate:
+            if user.category == cate.name:
+                random_menu = RestMenu.objects.filter(rest_id=cate.rest_id).order_by('?').first()
+                break
     current_user = request.user
     if request.method == "POST":
         form = PreferForm(request.POST)
@@ -342,6 +349,7 @@ def rest_ranking(request):
     rest_list = Rest.objects.order_by('rest_num')
     for rest in rest_list:
         rest.ranking_calc()
+    rest_list = rest_list.order_by('-rank_data')[:5]
     context = {'rest_list': rest_list}
     return render(request, 'bootrc/restRanking.html', context)
 
