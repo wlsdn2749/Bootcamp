@@ -120,7 +120,7 @@ class Crawling:
         return restaurant
 
     def review_parsing(self, review_results, restaurant):
-        for i in range(5):
+        for i in range(20):
             try:
                 review_dict = review_results[i]
             except IndexError:

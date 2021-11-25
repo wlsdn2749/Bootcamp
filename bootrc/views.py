@@ -131,15 +131,22 @@ def recom_menu(current_user):
 
         for count in user_prefer:
             if menu_list[i].rest_menu == count.pref_menu.rest_menu:
+                if count.pref_like == 0:
+                    probability = -200 # 절대 안걸림
                 probability += count.pref_like
+
                 # 유저가 해당 메뉴를 좋아하는 만큼 확률에 추가
+                # ex) 0 일경우 절대 그 메뉴 추천 하지 않음.
                 # ex) 4 만큼 좋아할 경우 (확률) + 4%
+
+        ## 히스토리 기능
         for count in recent:
             diff_time = count.created
             day_diff = time_for_recent_calc - diff_time.replace(tzinfo=None)
             if day_diff.days < 3:
-                if count.menu_name == menu_list[i].rest_menu:
-                    probability -= 10
+                if count.rest.rest_num == menu_list[i].rest.rest_num: # 히스토리 기능
+                    probability = -200 # 절대 안걸림
+
         # 별점 기준 확률 조정( 낮을 수록 적은 확률 )
         probability += (rest_star ** 2) * 2
         result = random.randrange(0, 100)
