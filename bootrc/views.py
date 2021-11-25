@@ -91,27 +91,39 @@ def recom_menu(current_user):
             if i == len(menu_list):
                 return menu_list[0]
             continue
-
-        for user in cate_list:
-            for rest in rest_cate:
-                if user.category == rest.name:
+        # cate_list는 유저의 카테고리 목록
+        # rest_cate는 가게의 카테고리 목록
+        # 하나라도 일치 하지 않을 경우에 다시 돌림
+        for cate in rest_cate:
+            for user in cate_list:
+                if user.category == cate.name:
                     probability += 5
                     check = 1
+                    continue
+                else:
+                    continue
+
+        if check == 0:
+            i += 1
+            continue
+
+        # for user in cate_list:
+        #     for cate in rest_cate:
+        #         if user.category == cate.name:
+        #             probability += 5
+        #             check = 1
     #            if "편의점" in rest.name:
     #                check = 0
     #        if user.category in rest_cate:
     #            probability += 10
     #            check += 1
-        if check == 0:
-            i += 1
-            continue
         '''
         # 도보(기본값)일 경우 가게와 떨어진 거리가 300이하인 경우 확률에 +5%
         if any(format in rest_cate for format2 in cate_list):
             i += 1
             continue
         '''
-        if menu_list[i].rest.rest_distance_fromBD > 10000:
+        if menu_list[i].rest.rest_distance_fromBD > 1000:
             i += 1
             continue
         elif menu_list[i].rest.rest_distance_fromBD < 300:
@@ -312,7 +324,7 @@ def category_select(request):
        category_name = category.values_list('name', flat=True).distinct()
        current_user = request.user
        cate_list = PreferCate.objects.filter(user_num=current_user).order_by('-id')
-       remove_set = ["편의점", "1인분주문", "테이크아웃", "프렌차이즈"]
+       remove_set = ["편의점", "1인분주문", "테이크아웃", "프랜차이즈"]
        category_name = list(category_name)
        category_name = [x for x in category_name if x not in remove_set]
        context = {'category_name': category_name, 'cate_list': cate_list}
