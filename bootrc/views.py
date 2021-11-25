@@ -235,7 +235,7 @@ def signup(request):
             user = authenticate(username=username, password=raw_password)  # authenticate 함수는 사용자명과 비밀번호가 일치하는지 검증해 줌.
 
             login(request, user)  # 로그인
-            return redirect('bootrc:menu_select')  # 가입 완료 후, 메인 페이지로 이동함.
+            return redirect('bootrc:category_select')  # 가입 완료 후, 메인 페이지로 이동함.
     else:
         form = UserForm()
     return render(request, 'bootrc/signup.html', {'form': form})
@@ -244,13 +244,13 @@ def signup(request):
 def menu_favorite(request):  # 음식 선호도 조사
     random_menu = RestMenu.objects.order_by('?')
     category = Categories.objects.order_by('?')
-    user_prefercate = PreferCate.objects.filter(user_num=request.user)
+    current_user = request.user
+    user_prefercate = PreferCate.objects.filter(user_num=current_user)
     for cate in category:
         for user in user_prefercate:
             if user.category == cate.name:
                 random_menu = RestMenu.objects.filter(rest_id=cate.rest_id).order_by('?').first()
                 break
-    current_user = request.user
     if request.method == "POST":
         form = PreferForm(request.POST)
         if form.is_valid():
@@ -259,11 +259,11 @@ def menu_favorite(request):  # 음식 선호도 조사
             prefer.save()
 
             form = PreferForm()
-            context = {'random_menu': random_menu, 'current_user': current_user, 'form': form}
+            context = {'random_menu': random_menu, 'current_user': current_user, 'form': form, 'user_prefercate': user_prefercate}
             return render(request, 'bootrc/menu_list_favorite_select.html', context)
     else:
         form = PreferForm()
-    context = {'random_menu': random_menu, 'current_user': current_user, 'form': form}
+    context = {'random_menu': random_menu, 'current_user': current_user, 'form': form, 'user_prefercate': user_prefercate}
     return render(request, 'bootrc/menu_list_favorite_select.html', context)
 
 
@@ -323,6 +323,7 @@ def app_review(request):
     return render(request, 'bootrc/app_review.html', context)
 
 def category_select(request):
+    current_user = request.user
     if request.method == 'POST':
         prefer = PreferCate.objects.filter(user_num=request.user)
         prefer.delete()
@@ -332,7 +333,7 @@ def category_select(request):
                 user_num=request.user,
                 category=obj
             )
-        return redirect('bootrc:index')
+        return redirect('bootrc:menu_select')
     else:
        category = Categories.objects.all().order_by('-name')
        category_name = category.values_list('name', flat=True).distinct()
