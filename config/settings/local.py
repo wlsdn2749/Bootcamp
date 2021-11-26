@@ -5,8 +5,7 @@ DB_USER = get_secret("DB_USER")
 DB_PASSWORD = get_secret("DB_PASSWORD")
 DB_HOST = get_secret("DB_HOST")
 DB_PORT = get_secret("DB_PORT")
-
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
