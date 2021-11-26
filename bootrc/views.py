@@ -68,10 +68,9 @@ def recom_menu(current_user):
     # values_list(flat=True) 는 튜플이 아닌 리스트로 필드의 값을 반환 한다
     recent = recentRecommended.objects.filter(user=current_user).order_by('-id')
     user_prefer = Prefer.objects.filter(user_num=current_user).order_by('-id')
-    cu = Categories.objects.filter(name="편의점")
+
     while True:
         check = 0  # 가게 카테고리와 유저 카테고리가 일치 하는지 검사 일치 1, 불일치 0
-        check_cu = False
         probability = 0.0  # 최종 메뉴 선별 확률( 마지막에 종합된 숫자로 확률 돌림 )
         rest_star = menu_list[i].rest.rest_star
         rest_cate = Categories.objects.filter(rest_id=menu_list[i].rest.rest_num)
@@ -92,7 +91,7 @@ def recom_menu(current_user):
 
         for cate in rest_cate:
             for user in cate_list:
-                if user.category == cate.name and user.category != cu[0].name:  # cate = rest_cate, user = cate_list
+                if user.category == cate.name:  # cate = rest_cate, user = cate_list
                     probability += 5
                     check = 1
                     continue
@@ -102,12 +101,11 @@ def recom_menu(current_user):
         if menu_list[i].rest.closing_time < time or time < menu_list[i].rest.opening_time:
             i += 1
             if i == len(menu_list):
-                count = 0
-                for cate in rest_cate:
-                    if cate.name != cu[0].name:
-                        return menu_list[count]
-                    count += 1
+                return menu_list[0]
             continue
+        # cate_list는 유저의 카테고리 목록
+        # rest_cate는 가게의 카테고리 목록
+        # 하나라도 일치 하지 않을 경우에 다시 돌림
 
         # cate_list는 유저의 카테고리 목록
         # rest_cate는 가게의 카테고리 목록
@@ -139,7 +137,6 @@ def recom_menu(current_user):
             probability += 5
 
         for count in user_prefer:
-            if menu_list[i].rest_menu == count.pref_menu.rest_menu:
                 if count.pref_like == 0:
                     probability = -200 # 절대 안걸림
                 probability += count.pref_like
