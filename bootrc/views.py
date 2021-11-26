@@ -91,27 +91,39 @@ def recom_menu(current_user):
             if i == len(menu_list):
                 return menu_list[0]
             continue
-
-        for user in cate_list:
-            for rest in rest_cate:
-                if user.category == rest.name:
+        # cate_list는 유저의 카테고리 목록
+        # rest_cate는 가게의 카테고리 목록
+        # 하나라도 일치 하지 않을 경우에 다시 돌림
+        for cate in rest_cate:
+            for user in cate_list:
+                if user.category == cate.name:
                     probability += 5
                     check = 1
+                    continue
+                else:
+                    continue
+
+        if check == 0:
+            i += 1
+            continue
+
+        # for user in cate_list:
+        #     for cate in rest_cate:
+        #         if user.category == cate.name:
+        #             probability += 5
+        #             check = 1
     #            if "편의점" in rest.name:
     #                check = 0
     #        if user.category in rest_cate:
     #            probability += 10
     #            check += 1
-        if check == 0:
-            i += 1
-            continue
         '''
         # 도보(기본값)일 경우 가게와 떨어진 거리가 300이하인 경우 확률에 +5%
         if any(format in rest_cate for format2 in cate_list):
             i += 1
             continue
         '''
-        if menu_list[i].rest.rest_distance_fromBD > 10000:
+        if menu_list[i].rest.rest_distance_fromBD > 1000:
             i += 1
             continue
         elif menu_list[i].rest.rest_distance_fromBD < 300:
@@ -119,15 +131,22 @@ def recom_menu(current_user):
 
         for count in user_prefer:
             if menu_list[i].rest_menu == count.pref_menu.rest_menu:
+                if count.pref_like == 0:
+                    probability = -200 # 절대 안걸림
                 probability += count.pref_like
+
                 # 유저가 해당 메뉴를 좋아하는 만큼 확률에 추가
+                # ex) 0 일경우 절대 그 메뉴 추천 하지 않음.
                 # ex) 4 만큼 좋아할 경우 (확률) + 4%
+
+        ## 히스토리 기능
         for count in recent:
             diff_time = count.created
             day_diff = time_for_recent_calc - diff_time.replace(tzinfo=None)
             if day_diff.days < 3:
-                if count.menu_name == menu_list[i].rest_menu:
-                    probability -= 10
+                if count.rest.rest_num == menu_list[i].rest.rest_num: # 히스토리 기능
+                    probability = -200 # 절대 안걸림
+
         # 별점 기준 확률 조정( 낮을 수록 적은 확률 )
         probability += (rest_star ** 2) * 2
         result = random.randrange(0, 100)
@@ -216,15 +235,22 @@ def signup(request):
             user = authenticate(username=username, password=raw_password)  # authenticate 함수는 사용자명과 비밀번호가 일치하는지 검증해 줌.
 
             login(request, user)  # 로그인
-            return redirect('bootrc:menu_select')  # 가입 완료 후, 메인 페이지로 이동함.
+            return redirect('bootrc:category_select')  # 가입 완료 후, 메인 페이지로 이동함.
     else:
         form = UserForm()
     return render(request, 'bootrc/signup.html', {'form': form})
 
 @login_required(login_url='bootrc:login')
 def menu_favorite(request):  # 음식 선호도 조사
-    random_menu = RestMenu.objects.order_by('?').first() # 랜덤 메뉴 하나
+    random_menu = RestMenu.objects.order_by('?')
+    category = Categories.objects.order_by('?')
     current_user = request.user
+    user_prefercate = PreferCate.objects.filter(user_num=current_user)
+    for cate in category:
+        for user in user_prefercate:
+            if user.category == cate.name:
+                random_menu = RestMenu.objects.filter(rest_id=cate.rest_id).order_by('?').first()
+                break
     if request.method == "POST":
         form = PreferForm(request.POST)
         if form.is_valid():
@@ -233,11 +259,11 @@ def menu_favorite(request):  # 음식 선호도 조사
             prefer.save()
 
             form = PreferForm()
-            context = {'random_menu': random_menu, 'current_user': current_user, 'form': form}
+            context = {'random_menu': random_menu, 'current_user': current_user, 'form': form, 'user_prefercate': user_prefercate}
             return render(request, 'bootrc/menu_list_favorite_select.html', context)
     else:
         form = PreferForm()
-    context = {'random_menu': random_menu, 'current_user': current_user, 'form': form}
+    context = {'random_menu': random_menu, 'current_user': current_user, 'form': form, 'user_prefercate': user_prefercate}
     return render(request, 'bootrc/menu_list_favorite_select.html', context)
 
 
@@ -297,6 +323,7 @@ def app_review(request):
     return render(request, 'bootrc/app_review.html', context)
 
 def category_select(request):
+    current_user = request.user
     if request.method == 'POST':
         prefer = PreferCate.objects.filter(user_num=request.user)
         prefer.delete()
@@ -306,13 +333,13 @@ def category_select(request):
                 user_num=request.user,
                 category=obj
             )
-        return redirect('bootrc:index')
+        return redirect('bootrc:menu_select')
     else:
        category = Categories.objects.all().order_by('-name')
        category_name = category.values_list('name', flat=True).distinct()
        current_user = request.user
        cate_list = PreferCate.objects.filter(user_num=current_user).order_by('-id')
-       remove_set = ["편의점", "1인분주문", "테이크아웃", "프렌차이즈"]
+       remove_set = ["편의점", "1인분주문", "테이크아웃", "프랜차이즈"]
        category_name = list(category_name)
        category_name = [x for x in category_name if x not in remove_set]
        context = {'category_name': category_name, 'cate_list': cate_list}
@@ -323,6 +350,7 @@ def rest_ranking(request):
     rest_list = Rest.objects.order_by('rest_num')
     for rest in rest_list:
         rest.ranking_calc()
+    rest_list = rest_list.order_by('-rank_data')[:5]
     context = {'rest_list': rest_list}
     return render(request, 'bootrc/restRanking.html', context)
 

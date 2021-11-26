@@ -2,12 +2,17 @@
 {% load static %}
 {% block content %}
         {% if user.is_authenticated %}
-        <a href="{% url 'bootrc:recommendmenu2' %}"><img alt="추천 페이지 이동" src="{% static '1.png' %}" class="main_button"></a>
-        <a href=""><img alt="맛집 랭킹" src="{% static '2.png' %}" class="main_button"></a>
+        <a href="{% url 'bootrc:menu_select' %}"><img alt="선호 메뉴 설정" src="{% static '4.png' %}" class="main_button"></a>
+        <a href="{% url 'bootrc:category_select' %}"><img alt="선호 카테고리 설정" src="{% static '5.png' %}" class="main_button"></a>
+        <a href="{% url 'bootrc:recommendmenu2' %}"><img alt="추천 결과 확인" src="{% static '1.png' %}" class="main_button"></a>
+        <a href="{% url 'bootrc:rest_ranking' %}"><img alt="맛집 랭킹" src="{% static '2.png' %}" class="main_button"></a>
         <a href="app_review"><img alt="리뷰 남기기" src="{% static '3.png' %}" class="main_button"></a>
         {% else %}
         <div class="main_no_login"><a href="login">로그인</a>을 하시면 다양한 기능을 이용할 수 있습니다.</div>
+        <a href="javascript:void(0);" onclick="alert('로그인 후 이용해주세요!');"><img alt="선호 메뉴 설정" src="{% static '4.png' %}" class="main_button"></a>
+        <a href="javascript:void(0);" onclick="alert('로그인 후 이용해주세요!');"><img alt="선호 카테고리 설정" src="{% static '5.png' %}" class="main_button"></a>
         <a href="javascript:void(0);" onclick="alert('로그인 후 이용해주세요!');"><img alt="추천 페이지 이동" src="{% static '1.png' %}" class="main_button"></a>
         <a href="javascript:void(0);" onclick="alert('로그인 후 이용해주세요!');"><img alt="맛집 랭킹" src="{% static '2.png' %}" class="main_button"></a>
+        <a href="javascript:void(0);" onclick="alert('로그인 후 이용해주세요!');"><img alt="리뷰 남기기" src="{% static '3.png' %}" class="main_button"></a>
         {% endif %}
 {% endblock %}

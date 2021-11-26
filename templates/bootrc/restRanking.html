@@ -2,9 +2,12 @@
 {% load static %}
 1<link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
 {% block content %}
-<div class="container my-3">
+<div style="float: left">
+    <br style="font-size=25px">위에서부터 1~5위</strong>
     {% if rest_list %}
-    {% for i in rest_list %}
+    {% for rest in rest_list %}
+    <br style="width: 50%;margin-top: 50px;text-align: center;float: left">
+        <img src ="/images/{{ rest.image }}/"style="width: 200px; height: 200px;">{{rest.rest_name}}</br>
     {% endfor %}
     {% endif %}
 </div>
