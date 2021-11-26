@@ -58,24 +58,30 @@ class Rest(models.Model):
         return result
 
     def ranking_calc(self):
-        review_ratings = Review.objects.filter(restaurant_id=self.rest_num).order_by('-id')
+        review_ratings = Review.objects.filter(restaurant_id=self.rest_num)
         app_ratings = AppReview.objects.filter(rest_id=self.rest_num)
         count = 0
         review_rating_avg = 0
         app_review_rating_avg = 0
-        for j in review_ratigs:
+        total_count = 0
+        for j in review_ratings:
             count += j.rating
         if review_ratings:
+            total_count += 1
             review_rating_avg = count / len(review_ratings)
         count = 0
-        for j in app_ratings:
-            count += j.like_count
-        if app_ratings:
+        if app_ratings.exists():
+            for j in app_ratings:
+                count += j.like_count
+            total_count += 1
             app_review_rating_avg = count / len(app_ratings)
-        total = (review_rating_avg + app_review_rating_avg + self.rest_star) / 3
+        if app_ratings.exists():
+            total = (review_rating_avg + app_review_rating_avg + self.rest_star) / 3
+        else:
+            total = (review_rating_avg + self.rest_star) / 2
         self.rank_data = total
         self.save()
-        return (review_rating_avg + app_review_rating_avg + self.rest_star) / 3
+        return total
 
 
 def menu_img_path(instance, filename):
