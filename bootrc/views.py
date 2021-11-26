@@ -65,10 +65,13 @@ def recom_menu(current_user):
     time_for_recent_calc = datetime.datetime.now()
     menu_list = RestMenu.objects.order_by('?')
     cate_list = PreferCate.objects.filter(user_num=current_user)
+    # values_list(flat=True) 는 튜플이 아닌 리스트로 필드의 값을 반환 한다
     recent = recentRecommended.objects.filter(user=current_user).order_by('-id')
     user_prefer = Prefer.objects.filter(user_num=current_user).order_by('-id')
+    cu = Categories.objects.filter(name="편의점")
     while True:
         check = 0  # 가게 카테고리와 유저 카테고리가 일치 하는지 검사 일치 1, 불일치 0
+        check_cu = False
         probability = 0.0  # 최종 메뉴 선별 확률( 마지막에 종합된 숫자로 확률 돌림 )
         rest_star = menu_list[i].rest.rest_star
         rest_cate = Categories.objects.filter(rest_id=menu_list[i].rest.rest_num)
@@ -86,23 +89,29 @@ def recom_menu(current_user):
         '''
         # datetime.time 형식
         # 가게 운영시간 기준에 맞지 않으면 다시 불러오기
-        if menu_list[i].rest.closing_time < time or time < menu_list[i].rest.opening_time:
-            i += 1
-            if i == len(menu_list):
-                return menu_list[0]
-            continue
-        # cate_list는 유저의 카테고리 목록
-        # rest_cate는 가게의 카테고리 목록
-        # 하나라도 일치 하지 않을 경우에 다시 돌림
+
         for cate in rest_cate:
             for user in cate_list:
-                if user.category == cate.name:
+                if user.category == cate.name and user.category != cu[0].name:  # cate = rest_cate, user = cate_list
                     probability += 5
                     check = 1
                     continue
                 else:
                     continue
 
+        if menu_list[i].rest.closing_time < time or time < menu_list[i].rest.opening_time:
+            i += 1
+            if i == len(menu_list):
+                count = 0
+                for cate in rest_cate:
+                    if cate.name != cu[0].name:
+                        return menu_list[count]
+                    count += 1
+            continue
+
+        # cate_list는 유저의 카테고리 목록
+        # rest_cate는 가게의 카테고리 목록
+        # 하나라도 일치 하지 않을 경우에 다시 돌림
         if check == 0:
             i += 1
             continue
